@@ -1,4 +1,8 @@
+const jwt = require('jsonwebtoken');
 const UserModel = require('../models/SysUserModel');
+
+// 签名
+const SECRET = 'salt';
 
 module.exports = (router) => {
   // 登陆
@@ -17,7 +21,19 @@ module.exports = (router) => {
       }
 
       // 存在
-      req.session.user = data;
+      // req.session.user = data;
+
+      const token = jwt.sign(
+        {
+          userId: data.clientId,
+        },
+        SECRET,
+        {
+          expiresIn: 60 * 30, // 秒到期时间
+        },
+      );
+
+      res.setHeader('token', token);
 
       return res.status(200).json({
         errorCode: 0,
@@ -32,7 +48,10 @@ module.exports = (router) => {
 
   // 登出
   router.post('/api/session/logout', (req, res) => {
-    delete req.session.user;
+    // delete req.session.user;
+
+    res.setHeader('token', 'none');
+
     return res.status(200).json({
       errorCode: 0,
       reason: 'OK',
