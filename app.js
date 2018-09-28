@@ -86,11 +86,22 @@ app.use((req, res) => {
 // 500：全局错误处理
 app.use((err, req, res, next) => {
   console.log(err);
+
+  if (err.name === 'TokenExpiredError' || err.name === 'UnauthorizedError') {
+    res.status(200).json({
+      errorCode: 401,
+      reason: 'jwt expired',
+    });
+
+    return next();
+  }
+
   res.status(200).json({
     errorCode: 500,
     reason: 'server error',
   });
-  next();
+
+  return next();
 });
 
 app.listen(3000, () => {
