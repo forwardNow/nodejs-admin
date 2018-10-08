@@ -149,28 +149,46 @@ SysUserModel.deleteSysUser = sysUser => new Promise((resolve, reject) => {
  * 查询
  * @param {*} condition
  * @param {*} pager
- * @example
- * const pageNum = 1;
- * const pageSize = 20;
- *
- * const PAGER = {
- *   skip: (pageNum - 1) * pageSize, //
- *   limit: pageNum * pageSize, // pageSize
- * };
  */
-SysUserModel.getSysUserList = (condition, pager = { skip: 0, limit: 20 }) => new Promise((resolve, reject) => {
-  SysUserModel.find(condition, null, pager, (err, sysUserList) => {
-    if (err) {
-      reject(err);
-    } else {
-      resolve(sysUserList);
-    }
-  });
+SysUserModel.getSysUserList = (
+  condition,
+  pager = { pageSize: 20, currentPage: 1 },
+) => new Promise((resolve, reject) => {
+  const { pageSize, currentPage } = pager;
+  const limit = pageSize;
+  const skip = pageSize * (currentPage - 1);
+
+  SysUserModel.find(
+    condition,
+    null,
+    { limit, skip },
+    (err, sysUserList) => {
+      if (err) {
+        reject(err);
+      } else {
+        // 查总数
+        SysUserModel.countDocuments(condition, (err2, total) => {
+          if (err2) {
+            return reject(err2);
+          }
+
+          return resolve({
+            sysUserList,
+            pager: {
+              total,
+              pageSize,
+              currentPage,
+            },
+          });
+        });
+      }
+    },
+  );
 });
 
 
 SysUserModel
   .getSysUserList({}, { skip: 3, limit: 3 })
-  .then(res => console.log(res.map(item => item.clientName)));
+  .then(res => console.log('测试分页：', res.sysUserList.map(item => item.clientName)));
 
 module.exports = SysUserModel;
