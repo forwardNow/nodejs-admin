@@ -2,7 +2,7 @@ const SysUserModel = require('../models/SysUserModel');
 
 module.exports = (router) => {
   router.get('/api/init', (req, res, next) => {
-    console.log(req.url);
+    //console.log(req.url);
     // 创建 admin 用户
     SysUserModel.addSysUser({
       clientName: 'admin',
