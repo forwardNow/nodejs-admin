@@ -1,8 +1,9 @@
+const uuidv1 = require('uuid/v1');
 const ModelUtils = require('../utils/ModelUtil');
 
 module.exports = ModelUtils.getModel('Users', {
   // 用户ID
-  UserId: { type: String, required: true },
+  UserId: { type: String, required: true, default: uuidv1 },
   // 姓名
   UserTrueName: { type: String, default: '' },
   // 昵称

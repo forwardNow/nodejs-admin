@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const UserModel = require('../models/SysUserModel');
+const ExternalPartyUsersDao = require('../daos/ExternalPartyUsersDao');
 
 // 签名
 const SECRET = 'salt';
@@ -8,15 +8,15 @@ module.exports = (router) => {
   // 登陆
   router.post('/api/session/login', (req, res, next) => {
     const { body: user } = req;
-    UserModel.findOne({
-      clientName: user.clientName,
-      clientPassword: user.clientPassword,
+    ExternalPartyUsersDao.getByCondition({
+      ExternalIdentifier: user.ExternalIdentifier,
+      ExternalCredential: user.ExternalCredential,
     }).then((data) => {
       // 不存在
       if (!data) {
         return res.status(200).json({
           errorCode: 101001,
-          reason: 'clientName or clientPassword is invalid.',
+          reason: 'ExternalIdentifier or ExternalCredential is invalid.',
         });
       }
 
@@ -25,7 +25,7 @@ module.exports = (router) => {
 
       const token = jwt.sign(
         {
-          userId: data.clientId,
+          userId: data.ExternalIdentifier,
         },
         SECRET,
         {

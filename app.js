@@ -33,7 +33,6 @@ app.use(
     secret: SECRET,
     credentialsRequired: false,
     getToken: function fromHeaderOrQuerystring(req) {
-      //console.log(req.headers.token);
       if (req.headers.token) {
         return req.headers.token;
       }
@@ -52,8 +51,6 @@ app.use(
     ],
   }),
   (req, res, next) => {
-    //console.log('req.user', req.user);
-
     // 当访问 /api/session/login 时，req.user === undefined
     if (!req.user) {
       return next();
