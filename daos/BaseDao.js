@@ -1,9 +1,9 @@
 class BaseDao {
-  constructor() {
+  constructor(Model) {
     /**
      * @type {any}
      */
-    this.Model = null;
+    this.Model = Model;
   }
 
   /**
@@ -49,7 +49,7 @@ class BaseDao {
         if (error) {
           return reject(error);
         }
-        return resolve();
+        return resolve('ok');
       });
     });
   }

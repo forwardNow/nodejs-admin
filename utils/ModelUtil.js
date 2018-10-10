@@ -1,8 +1,7 @@
-require('./dbConfig');
 const mongoose = require('mongoose');
+const MongodbUtil = require('./MongodbUtil');
 
 const { Schema } = mongoose;
-
 
 /**
  * 获取模型
@@ -11,7 +10,7 @@ const { Schema } = mongoose;
  * @returns {Model}
  */
 function getModel(tbName, tbStructure) {
-  return mongoose.model(tbName, new Schema(tbStructure));
+  return MongodbUtil.getClient().model(tbName, new Schema(tbStructure), tbName);
 }
 
 exports.getModel = getModel;

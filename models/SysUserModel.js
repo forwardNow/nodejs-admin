@@ -2,7 +2,7 @@ const uuidv1 = require('uuid/v1');
 
 const mongoose = require('mongoose');
 
-require('./dbConfig');
+require('../utils/MongodbUtil');
 
 const { Schema } = mongoose;
 

@@ -1,6 +1,6 @@
-const ModelUtils = require('./ModelUtils');
+const ModelUtils = require('../utils/ModelUtil');
 
-module.exports = ModelUtils.getModel('User', {
+module.exports = ModelUtils.getModel('Users', {
   // 用户ID
   UserId: { type: String, required: true },
   // 姓名
