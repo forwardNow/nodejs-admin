@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const sessionRoute = require('./SessionRoute');
+const usersRoute = require('./UsersRoute');
 const initRoute = require('./initRoute');
 
 // 首页
@@ -13,8 +14,8 @@ router.get('/', (req, res) => {
 
 initRoute(router);
 
-// session 路由
 sessionRoute(router);
 
+usersRoute(router);
 
 module.exports = router;

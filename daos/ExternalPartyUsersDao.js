@@ -4,6 +4,7 @@ const ExternalPartyUsersModel = require('../models/ExternalPartyUsersModel');
 class ExternalPartyUsersDao extends BaseDao {
   constructor() {
     super(ExternalPartyUsersModel);
+    this.model = ExternalPartyUsersModel;
   }
 }
 

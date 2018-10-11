@@ -12,14 +12,7 @@ class BaseDao {
    * @return {Promise<Number>}
    */
   getCountByCondition(condition = {}) {
-    return new Promise((resolve, reject) => {
-      this.Model.countDocuments(condition, (err, count) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(count);
-      });
-    });
+    return this.Model.countDocuments(condition).exec();
   }
 
   /**
@@ -28,14 +21,7 @@ class BaseDao {
    * @return {Promise<any>}
    */
   deleteByCondition(condition = {}) {
-    return new Promise((resolve, reject) => {
-      this.Model.deleteMany(condition, (err, res) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(res);
-      });
-    });
+    return this.Model.deleteMany(condition).exec();
   }
 
   /**
@@ -60,14 +46,7 @@ class BaseDao {
    * @returns {Promise<any>}
    */
   getByCondition(condition) {
-    return new Promise((resolve, reject) => {
-      this.Model.findOne(condition, (err, res) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(res);
-      });
-    });
+    return this.Model.findOne(condition).exec();
   }
 
 
@@ -82,7 +61,7 @@ class BaseDao {
     const limit = pageSize;
     const skip = pageSize * (currentPage - 1);
 
-    return this.Model.find(condition, null, { limit, skip });
+    return this.Model.find(condition).skip(skip).limit(limit).exec();
   }
 
   /**
@@ -98,14 +77,7 @@ class BaseDao {
         newBean[key] = bean[key];
       }
     });
-    return new Promise((resolve, reject) => {
-      this.Model.updateMany(condition, newBean, (err, res) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(res);
-      });
-    });
+    return this.Model.updateMany(condition, newBean).exec();
   }
 }
 

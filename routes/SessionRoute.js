@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const ExternalPartyUsersDao = require('../daos/ExternalPartyUsersDao');
+const UsersDao = require('../daos/UsersDao');
 
 // 签名
 const SECRET = 'salt';
@@ -7,13 +8,13 @@ const SECRET = 'salt';
 module.exports = (router) => {
   // 登陆
   router.post('/api/session/login', (req, res, next) => {
-    const { body: user } = req;
+    const { body: loginUser } = req;
     ExternalPartyUsersDao.getByCondition({
-      ExternalIdentifier: user.ExternalIdentifier,
-      ExternalCredential: user.ExternalCredential,
-    }).then((data) => {
+      ExternalIdentifier: loginUser.ExternalIdentifier,
+      ExternalCredential: loginUser.ExternalCredential,
+    }).then((externalPartyUser) => {
       // 不存在
-      if (!data) {
+      if (!externalPartyUser) {
         return res.status(200).json({
           errorCode: 101001,
           reason: 'ExternalIdentifier or ExternalCredential is invalid.',
@@ -21,11 +22,13 @@ module.exports = (router) => {
       }
 
       // 存在
-      // req.session.user = data;
-
+      return UsersDao.getByCondition({
+        UserId: externalPartyUser.UserId,
+      });
+    }).then((user) => {
       const token = jwt.sign(
         {
-          userId: data.ExternalIdentifier,
+          userId: user.UserId,
         },
         SECRET,
         {
@@ -38,7 +41,7 @@ module.exports = (router) => {
       return res.status(200).json({
         errorCode: 0,
         reason: 'OK',
-        result: data,
+        result: user,
       });
     }).catch((err) => {
     // 处理异常
