@@ -1,4 +1,4 @@
-const UserDao = require('../daos/UsersDao');
+const UsersDao = require('../daos/UsersDao');
 
 module.exports = (router) => {
   // 用户 / 列表（模糊查询）
@@ -19,10 +19,10 @@ module.exports = (router) => {
       items: null,
       pager: { pageSize, currentPage },
     };
-    UserDao.getListByConditionAndPager(condition, result.pager)
+    UsersDao.getListByConditionAndPager(condition, result.pager)
       .then((list) => {
         result.items = list;
-        return UserDao.getCountByCondition(condition);
+        return UsersDao.getCountByCondition(condition);
       })
       .then((count) => {
         result.pager.total = count;
@@ -37,7 +37,7 @@ module.exports = (router) => {
   // 用户 / find by id
   router.post('/api/user/get', (req, res) => {
     const { body: user } = req;
-    UserDao.getByCondition({
+    UsersDao.getByCondition({
       UserId: user.UserId,
     }).then((data) => {
       // 找到了
@@ -53,5 +53,25 @@ module.exports = (router) => {
         reason: 'not exists',
       });
     });
+  });
+
+  // 用户 / 编辑
+  router.post('/api/user/edit', (req, res) => {
+    const { body: user } = req;
+
+    user.ModifiedTime = Date.now();
+
+    UsersDao.updateSelectiveByCondition(
+      { UserId: user.UserId },
+      user,
+    )
+      .then(() => res.status(200).json({
+        errorCode: 0,
+        reason: 'OK',
+      }))
+      .catch(() => res.status(200).json({
+        errorCode: 1,
+        reason: '更新失败',
+      }));
   });
 };
