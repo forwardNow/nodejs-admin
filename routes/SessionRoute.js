@@ -15,10 +15,11 @@ module.exports = (router) => {
     }).then((externalPartyUser) => {
       // 不存在
       if (!externalPartyUser) {
-        return res.status(200).json({
+        res.status(200).json({
           errorCode: 101001,
           reason: 'ExternalIdentifier or ExternalCredential is invalid.',
         });
+        return Promise.reject();
       }
 
       // 存在
@@ -44,8 +45,10 @@ module.exports = (router) => {
         result: user,
       });
     }).catch((err) => {
-    // 处理异常
-      next(err);
+      // 处理异常：如果 err 为 null，说明不是抛异常而是停止 then 链。
+      if (err) {
+        next(err);
+      }
     });
   });
 
