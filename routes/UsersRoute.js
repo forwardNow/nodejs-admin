@@ -56,7 +56,7 @@ module.exports = (router) => {
   });
 
   // 用户 / 编辑
-  router.post('/api/user/edit', (req, res) => {
+  router.post('/api/user/update', (req, res) => {
     const { body: user } = req;
 
     user.ModifiedTime = Date.now();
