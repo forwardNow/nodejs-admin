@@ -1,11 +1,11 @@
-const MenusDao = require('../daos/MenusDao');
+const DicDao = require('../daos/DicDao');
 
 module.exports = (router) => {
-  // 菜单 / 列表（模糊查询）
-  router.post('/api/menu/list', (req, res) => {
+  // 列表（模糊查询）
+  router.post('/api/dic/list', (req, res) => {
     const {
       body: {
-        MenuName,
+        DicName,
         pager: {
           pageSize,
           currentPage,
@@ -13,16 +13,16 @@ module.exports = (router) => {
       },
     } = req;
     const condition = {
-      MenuName: new RegExp(MenuName || '', 'i'),
+      DicName: new RegExp(DicName || '', 'i'),
     };
     const result = {
       items: null,
       pager: { pageSize, currentPage },
     };
-    MenusDao.getListByConditionAndPager(condition, result.pager)
+    DicDao.getListByConditionAndPager(condition, result.pager)
       .then((list) => {
         result.items = list;
-        return MenusDao.getCountByCondition(condition);
+        return DicDao.getCountByCondition(condition);
       })
       .then((count) => {
         result.pager.total = count;
@@ -34,11 +34,10 @@ module.exports = (router) => {
       });
   });
 
-  // 菜单 / find by id
-  router.post('/api/menu/get', (req, res) => {
-    const { body: menu } = req;
-    MenusDao.getByCondition({
-      SystemId: menu.SystemId,
+  router.post('/api/dic/get', (req, res) => {
+    const { body: dic } = req;
+    DicDao.getByCondition({
+      DicName: dic.DicName,
     }).then((data) => {
       // 找到了
       if (data) {
@@ -55,15 +54,14 @@ module.exports = (router) => {
     });
   });
 
-  // 菜单 / 更新
-  router.post('/api/menu/update', (req, res) => {
-    const { body: menu } = req;
+  router.post('/api/dic/update', (req, res) => {
+    const { body: dic } = req;
 
-    menu.ModifiedTime = Date.now();
+    dic.ModifiedTime = Date.now();
 
-    MenusDao.updateSelectiveByCondition(
-      { SystemId: menu.SystemId },
-      menu,
+    DicDao.updateSelectiveByCondition(
+      { DicName: dic.DicName },
+      dic,
     )
       .then(() => res.status(200).json({
         errorCode: 0,
@@ -75,11 +73,9 @@ module.exports = (router) => {
       }));
   });
 
-  // 菜单 / 插入
-  router.post('/api/menu/insert', (req, res) => {
-    const { body: menu } = req;
-
-    MenusDao.insert(menu)
+  router.post('/api/dic/insert', (req, res) => {
+    const { body: dic } = req;
+    DicDao.insert(dic)
       .then(() => res.status(200).json({
         errorCode: 0,
         reason: 'OK',
@@ -90,11 +86,10 @@ module.exports = (router) => {
       }));
   });
 
-  // 菜单 / 删除
-  router.post('/api/menu/delete', (req, res) => {
-    const { body: menu } = req;
+  router.post('/api/dic/delete', (req, res) => {
+    const { body: dic } = req;
 
-    MenusDao.deleteByCondition(menu)
+    DicDao.deleteByCondition(dic)
       .then(() => res.status(200).json({
         errorCode: 0,
         reason: 'OK',

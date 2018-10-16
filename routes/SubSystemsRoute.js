@@ -1,11 +1,11 @@
-const MenusDao = require('../daos/MenusDao');
+const SubSystemsDao = require('../daos/SubSystemsDao');
 
 module.exports = (router) => {
-  // 菜单 / 列表（模糊查询）
-  router.post('/api/menu/list', (req, res) => {
+  // 列表（模糊查询）
+  router.post('/api/subsys/list', (req, res) => {
     const {
       body: {
-        MenuName,
+        SystemName,
         pager: {
           pageSize,
           currentPage,
@@ -13,16 +13,16 @@ module.exports = (router) => {
       },
     } = req;
     const condition = {
-      MenuName: new RegExp(MenuName || '', 'i'),
+      SystemName: new RegExp(SystemName || '', 'i'),
     };
     const result = {
       items: null,
       pager: { pageSize, currentPage },
     };
-    MenusDao.getListByConditionAndPager(condition, result.pager)
+    SubSystemsDao.getListByConditionAndPager(condition, result.pager)
       .then((list) => {
         result.items = list;
-        return MenusDao.getCountByCondition(condition);
+        return SubSystemsDao.getCountByCondition(condition);
       })
       .then((count) => {
         result.pager.total = count;
@@ -34,11 +34,10 @@ module.exports = (router) => {
       });
   });
 
-  // 菜单 / find by id
-  router.post('/api/menu/get', (req, res) => {
-    const { body: menu } = req;
-    MenusDao.getByCondition({
-      SystemId: menu.SystemId,
+  router.post('/api/subsys/get', (req, res) => {
+    const { body: subsys } = req;
+    SubSystemsDao.getByCondition({
+      SystemId: subsys.SystemId,
     }).then((data) => {
       // 找到了
       if (data) {
@@ -55,15 +54,14 @@ module.exports = (router) => {
     });
   });
 
-  // 菜单 / 更新
-  router.post('/api/menu/update', (req, res) => {
-    const { body: menu } = req;
+  router.post('/api/subsys/update', (req, res) => {
+    const { body: subsys } = req;
 
-    menu.ModifiedTime = Date.now();
+    subsys.ModifiedTime = Date.now();
 
-    MenusDao.updateSelectiveByCondition(
-      { SystemId: menu.SystemId },
-      menu,
+    SubSystemsDao.updateSelectiveByCondition(
+      { SystemId: subsys.SystemId },
+      subsys,
     )
       .then(() => res.status(200).json({
         errorCode: 0,
@@ -75,11 +73,9 @@ module.exports = (router) => {
       }));
   });
 
-  // 菜单 / 插入
-  router.post('/api/menu/insert', (req, res) => {
-    const { body: menu } = req;
-
-    MenusDao.insert(menu)
+  router.post('/api/subsys/insert', (req, res) => {
+    const { body: subsys } = req;
+    SubSystemsDao.insert(subsys)
       .then(() => res.status(200).json({
         errorCode: 0,
         reason: 'OK',
@@ -90,11 +86,10 @@ module.exports = (router) => {
       }));
   });
 
-  // 菜单 / 删除
-  router.post('/api/menu/delete', (req, res) => {
-    const { body: menu } = req;
+  router.post('/api/subsys/delete', (req, res) => {
+    const { body: subsys } = req;
 
-    MenusDao.deleteByCondition(menu)
+    SubSystemsDao.deleteByCondition(subsys)
       .then(() => res.status(200).json({
         errorCode: 0,
         reason: 'OK',

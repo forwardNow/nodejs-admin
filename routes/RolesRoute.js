@@ -13,7 +13,7 @@ module.exports = (router) => {
       },
     } = req;
     const condition = {
-      RoleName: new RegExp(RoleName || '', 'i'),
+      SystemName: new RegExp(RoleName || '', 'i'),
     };
     const result = {
       items: null,
@@ -37,7 +37,7 @@ module.exports = (router) => {
   router.post('/api/role/get', (req, res) => {
     const { body: menu } = req;
     RolesDao.getByCondition({
-      RoleId: menu.RoleId,
+      SystemId: menu.SystemId,
     }).then((data) => {
       // 找到了
       if (data) {
@@ -60,7 +60,7 @@ module.exports = (router) => {
     role.ModifiedTime = Date.now();
 
     RolesDao.updateSelectiveByCondition(
-      { RoleId: role.RoleId },
+      { SystemId: role.SystemId },
       role,
     )
       .then(() => res.status(200).json({
