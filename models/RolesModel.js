@@ -3,10 +3,10 @@ const ModelUtils = require('../utils/ModelUtil');
 
 module.exports = ModelUtils.getModel('Roles', {
   // 角色ID
-  SystemId: { type: String, required: true, default: uuidv1 },
+  RoleId: { type: String, required: true, default: uuidv1 },
 
   // 角色名称
-  SystemName: { type: String, default: '' },
+  RoleName: { type: String, default: '' },
 
   // 角色类别
   RoleCategory: { type: Number, default: '' },

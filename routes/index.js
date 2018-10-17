@@ -9,6 +9,7 @@ const menusRoute = require('./MenusRoute');
 const rolesRoute = require('./RolesRoute');
 const subSystemsRoute = require('./SubSystemsRoute');
 const dicRoute = require('./DicRoute');
+const externalPartyUsersRoute = require('./ExternalPartyUsersRoute');
 
 // 首页
 router.get('/', (req, res) => {
@@ -29,5 +30,7 @@ rolesRoute(router);
 subSystemsRoute(router);
 
 dicRoute(router);
+
+externalPartyUsersRoute(router);
 
 module.exports = router;

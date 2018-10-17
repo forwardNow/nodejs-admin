@@ -1,28 +1,33 @@
-const RolesDao = require('../daos/RolesDao');
+const assert = require('assert');
+const BaseDao = require('../daos/BaseDao');
 
-module.exports = (router) => {
+module.exports = (path, pkName, router, Dao = new BaseDao()) => {
   // 列表（模糊查询）
-  router.post('/api/role/list', (req, res) => {
+  router.post(`/api/${path}/list`, (req, res) => {
     const {
       body: {
-        RoleName,
+        condition,
         pager: {
           pageSize,
           currentPage,
         },
       },
     } = req;
-    const condition = {
-      RoleName: new RegExp(RoleName || '', 'i'),
-    };
+
+    const newCondition = {};
+
+    Object.keys(condition).forEach((key) => {
+      newCondition[key] = new RegExp(condition[key], 'i');
+    });
+
     const result = {
       items: null,
       pager: { pageSize, currentPage },
     };
-    RolesDao.getListByConditionAndPager(condition, result.pager)
+    Dao.getListByConditionAndPager(condition, result.pager)
       .then((list) => {
         result.items = list;
-        return RolesDao.getCountByCondition(condition);
+        return Dao.getCountByCondition(condition);
       })
       .then((count) => {
         result.pager.total = count;
@@ -34,11 +39,12 @@ module.exports = (router) => {
       });
   });
 
-  router.post('/api/role/get', (req, res) => {
-    const { body: menu } = req;
-    RolesDao.getByCondition({
-      RoleId: menu.RoleId,
-    }).then((data) => {
+  router.post(`/api/${path}/get`, (req, res) => {
+    const { body: bean } = req;
+
+    assert(bean[pkName]);
+
+    Dao.getByCondition({ pkName: bean[pkName] }).then((data) => {
       // 找到了
       if (data) {
         return res.status(200).json({
@@ -54,29 +60,10 @@ module.exports = (router) => {
     });
   });
 
-  router.post('/api/role/update', (req, res) => {
-    const { body: role } = req;
+  router.post(`/api/${path}/insert`, (req, res) => {
+    const { body: bean } = req;
 
-    role.ModifiedTime = Date.now();
-
-    RolesDao.updateSelectiveByCondition(
-      { RoleId: role.RoleId },
-      role,
-    )
-      .then(() => res.status(200).json({
-        errorCode: 0,
-        reason: 'OK',
-      }))
-      .catch(() => res.status(200).json({
-        errorCode: 1,
-        reason: '更新失败',
-      }));
-  });
-
-  router.post('/api/role/insert', (req, res) => {
-    const { body: role } = req;
-
-    RolesDao.insert(role)
+    Dao.insert(bean)
       .then(() => res.status(200).json({
         errorCode: 0,
         reason: 'OK',
@@ -87,10 +74,30 @@ module.exports = (router) => {
       }));
   });
 
-  router.post('/api/role/delete', (req, res) => {
-    const { body: role } = req;
+  router.post(`/api/${path}/update`, (req, res) => {
+    const { body: bean } = req;
 
-    RolesDao.deleteByCondition(role)
+    assert(bean[pkName]);
+
+    bean.ModifiedTime = Date.now();
+
+    Dao.updateSelectiveByCondition({ pkName: bean[pkName] }, bean)
+      .then(() => res.status(200).json({
+        errorCode: 0,
+        reason: 'OK',
+      }))
+      .catch(() => res.status(200).json({
+        errorCode: 1,
+        reason: '更新失败',
+      }));
+  });
+
+  router.post(`/api/${path}/delete`, (req, res) => {
+    const { body: bean } = req;
+
+    assert(bean[pkName]);
+
+    Dao.deleteByCondition(bean)
       .then(() => res.status(200).json({
         errorCode: 0,
         reason: 'OK',

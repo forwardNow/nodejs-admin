@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const expressJwt = require('express-jwt');
 
 const routes = require('./routes/index.js');
+const UsersDao = require('./daos/UsersDao');
 
 const app = express();
 
@@ -26,7 +27,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-// 接口服务：以 '/api' 打头的 url 都需要认证
+/*
+ * 接口服务：以 '/api' 打头的 url 都需要认证
+ * expressJwt 将解码后的对象挂载到 req.user
+ */
 app.use(
   '/api',
   expressJwt({
@@ -50,7 +54,7 @@ app.use(
       '/api/init',
     ],
   }),
-  (req, res, next) => {
+  async (req, res, next) => {
     // 当访问 /api/session/login 时，req.user === undefined
     if (!req.user) {
       return next();
@@ -62,6 +66,10 @@ app.use(
         reason: '未登录',
       });
     }
+
+    await UsersDao.getByCondition({ UserId: req.user.userId }).then((user) => {
+      req.User = user;
+    });
 
     // TODO: 判断是否有权限
 

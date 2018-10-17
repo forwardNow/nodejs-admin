@@ -1,4 +1,7 @@
+const assert = require('assert');
+const uuidv1 = require('uuid/v1');
 const UsersDao = require('../daos/UsersDao');
+const ExternalPartyUsersDao = require('../daos/ExternalPartyUsersDao');
 
 module.exports = (router) => {
   // 用户 / 列表（模糊查询）
@@ -73,5 +76,42 @@ module.exports = (router) => {
         errorCode: 1,
         reason: '更新失败',
       }));
+  });
+
+  router.post('/api/user/delete', async (req, res) => {
+    const { body: user } = req;
+
+    assert(user.UserId);
+
+    await UsersDao.deleteByCondition({ UserId: user.UserId });
+
+    await ExternalPartyUsersDao.deleteByCondition({ UserId: user.UserId });
+
+    res.status(200).json({
+      errorCode: 0,
+      reason: 'OK',
+    });
+  });
+
+  router.post('/api/user/register', async (req, res) => {
+    const {
+      body: {
+        User,
+        ExternalPartyUser,
+      },
+    } = req;
+
+    const UserId = uuidv1();
+    const newUser = Object.assign({}, User, { UserId });
+    const newExternalPartyUser = Object.assign({}, ExternalPartyUser, { UserId });
+
+    await UsersDao.insert(newUser);
+
+    await ExternalPartyUsersDao.insert(newExternalPartyUser);
+
+    res.status(200).json({
+      errorCode: 0,
+      reason: 'OK',
+    });
   });
 };
