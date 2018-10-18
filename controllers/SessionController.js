@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const ExternalPartyUsersDao = require('../daos/ExternalPartyUsersDao');
-const UsersDao = require('../daos/UsersDao');
+const UsersDao = require('../daos/UserDao');
 
 // 签名
-const SECRET = 'salt';
+const { JWT_SECRET } = require('../configs/var');
 
 module.exports = (router) => {
   // 登陆
@@ -44,7 +44,7 @@ module.exports = (router) => {
         {
           userId: user.UserId,
         },
-        SECRET,
+        JWT_SECRET,
         {
           expiresIn: 60 * 30, // 秒到期时间
         },

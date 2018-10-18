@@ -1,6 +1,6 @@
 const assert = require('assert');
 const uuidv1 = require('uuid/v1');
-const UsersDao = require('../daos/UsersDao');
+const UsersDao = require('../daos/UserDao');
 const ExternalPartyUsersDao = require('../daos/ExternalPartyUsersDao');
 
 module.exports = (router) => {

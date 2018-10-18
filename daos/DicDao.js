@@ -1,9 +1,9 @@
 const BaseDao = require('./BaseDao');
-const DicModel = require('../models/DicModel');
+const DicBean = require('../beans/DicBean');
 
 class DicDao extends BaseDao {
   constructor() {
-    super(DicModel);
+    super('Dic', new DicBean());
   }
 }
 

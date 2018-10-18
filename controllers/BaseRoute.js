@@ -1,28 +1,32 @@
-const MenusDao = require('../daos/MenusDao');
+const assert = require('assert');
 
-module.exports = (router) => {
-  // 菜单 / 列表（模糊查询）
-  router.post('/api/menu/list', (req, res) => {
+exports.setBaseRoute = (path, pkName, router, Dao) => {
+  // 列表（模糊查询）
+  router.post(`/api/${path}/list`, (req, res) => {
     const {
       body: {
-        MenuName,
+        condition,
         pager: {
           pageSize,
           currentPage,
         },
       },
     } = req;
-    const condition = {
-      MenuName: new RegExp(MenuName || '', 'i'),
-    };
+
+    const newCondition = {};
+
+    Object.keys(condition).forEach((key) => {
+      newCondition[key] = new RegExp(condition[key], 'i');
+    });
+
     const result = {
       items: null,
       pager: { pageSize, currentPage },
     };
-    MenusDao.getListByConditionAndPager(condition, result.pager)
+    Dao.getListByConditionAndPager(condition, result.pager)
       .then((list) => {
         result.items = list;
-        return MenusDao.getCountByCondition(condition);
+        return Dao.getCountByCondition(condition);
       })
       .then((count) => {
         result.pager.total = count;
@@ -34,12 +38,12 @@ module.exports = (router) => {
       });
   });
 
-  // 菜单 / find by id
-  router.post('/api/menu/get', (req, res) => {
-    const { body: menu } = req;
-    MenusDao.getByCondition({
-      SystemId: menu.SystemId,
-    }).then((data) => {
+  router.post(`/api/${path}/get`, (req, res) => {
+    const { body: bean } = req;
+
+    assert(bean[pkName]);
+
+    Dao.getByCondition({ pkName: bean[pkName] }).then((data) => {
       // 找到了
       if (data) {
         return res.status(200).json({
@@ -55,31 +59,10 @@ module.exports = (router) => {
     });
   });
 
-  // 菜单 / 更新
-  router.post('/api/menu/update', (req, res) => {
-    const { body: menu } = req;
+  router.post(`/api/${path}/insert`, (req, res) => {
+    const { body: bean } = req;
 
-    menu.ModifiedTime = Date.now();
-
-    MenusDao.updateSelectiveByCondition(
-      { SystemId: menu.SystemId },
-      menu,
-    )
-      .then(() => res.status(200).json({
-        errorCode: 0,
-        reason: 'OK',
-      }))
-      .catch(() => res.status(200).json({
-        errorCode: 1,
-        reason: '更新失败',
-      }));
-  });
-
-  // 菜单 / 插入
-  router.post('/api/menu/insert', (req, res) => {
-    const { body: menu } = req;
-
-    MenusDao.insert(menu)
+    Dao.insert(bean)
       .then(() => res.status(200).json({
         errorCode: 0,
         reason: 'OK',
@@ -90,11 +73,30 @@ module.exports = (router) => {
       }));
   });
 
-  // 菜单 / 删除
-  router.post('/api/menu/delete', (req, res) => {
-    const { body: menu } = req;
+  router.post(`/api/${path}/update`, (req, res) => {
+    const { body: bean } = req;
 
-    MenusDao.deleteByCondition(menu)
+    assert(bean[pkName]);
+
+    bean.ModifiedTime = Date.now();
+
+    Dao.updateSelectiveByCondition({ pkName: bean[pkName] }, bean)
+      .then(() => res.status(200).json({
+        errorCode: 0,
+        reason: 'OK',
+      }))
+      .catch(() => res.status(200).json({
+        errorCode: 1,
+        reason: '更新失败',
+      }));
+  });
+
+  router.post(`/api/${path}/delete`, (req, res) => {
+    const { body: bean } = req;
+
+    assert(bean[pkName]);
+
+    Dao.deleteByCondition(bean)
       .then(() => res.status(200).json({
         errorCode: 0,
         reason: 'OK',

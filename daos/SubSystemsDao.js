@@ -1,9 +1,9 @@
 const BaseDao = require('./BaseDao');
-const SubSystemsModel = require('../models/SubSystemsModel');
+const SubSystemBean = require('../beans/SubSystemBean');
 
 class SubSystemsDao extends BaseDao {
   constructor() {
-    super(SubSystemsModel);
+    super('SubSystems', new SubSystemBean());
   }
 }
 

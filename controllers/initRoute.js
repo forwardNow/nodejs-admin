@@ -1,6 +1,6 @@
 const uuidv1 = require('uuid/v1');
 const ExternalPartyUsersDao = require('../daos/ExternalPartyUsersDao');
-const UsersDao = require('../daos/UsersDao');
+const UsersDao = require('../daos/UserDao');
 
 module.exports = (router) => {
   router.get('/api/init', (req, res, next) => {

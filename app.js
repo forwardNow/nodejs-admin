@@ -4,13 +4,15 @@ const expressArtTemplate = require('express-art-template');
 const bodyParser = require('body-parser');
 const expressJwt = require('express-jwt');
 
-const routes = require('./routes/index.js');
-const UsersDao = require('./daos/UsersDao');
+// const routes = require('./routes/index.js');
+const router = require('./router');
+
+const UsersDao = require('./daos/UserDao');
 
 const app = express();
 
 // 签名
-const SECRET = 'salt';
+const { JWT_SECRET, PREFIX_PATH } = require('./configs/var');
 
 // 静态服务
 app.use('/public/', express.static(path.join(__dirname, './public/')));
@@ -32,9 +34,9 @@ app.use(bodyParser.json());
  * expressJwt 将解码后的对象挂载到 req.user
  */
 app.use(
-  '/api',
+  PREFIX_PATH,
   expressJwt({
-    secret: SECRET,
+    secret: JWT_SECRET,
     credentialsRequired: false,
     getToken: function fromHeaderOrQuerystring(req) {
       if (req.headers.token) {
@@ -50,8 +52,8 @@ app.use(
   }).unless({
     // 除了这些地址，其他的URL都需要验证
     path: [
-      '/api/session/login',
-      '/api/init',
+      `${PREFIX_PATH}/session/login`,
+      `${PREFIX_PATH}/init`,
     ],
   }),
   async (req, res, next) => {
@@ -77,8 +79,17 @@ app.use(
   },
 );
 
+// 首页
+app.get('/', (req, res) => {
+  const { session: { user } } = req;
+  res.render('index.html', { user });
+});
+
 // 将路由挂载到 app
-app.use(routes);
+// app.use(PREFIX_PATH, routes);
+
+// 挂载 router
+router.mountTo(app);
 
 // 404
 app.use((req, res) => {

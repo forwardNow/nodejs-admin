@@ -1,27 +1,28 @@
+const { Schema } = require('mongoose');
+const MongodbUtil = require('../utils/MongodbUtil');
+
 class BaseDao {
-  constructor(Model) {
-    /**
-     * @type {any}
-     */
-    this.Model = Model;
+  constructor(tbName, bean) {
+    this.bean = bean;
+    this.Model = MongodbUtil.getClient().model(tbName, new Schema(bean), tbName);
   }
 
   /**
    * 根据条件获取总数
-   * @param condition
+   * @param bean
    * @return {Promise<Number>}
    */
-  getCountByCondition(condition = {}) {
-    return this.Model.countDocuments(condition).exec();
+  getCountByCondition(bean = {}) {
+    return this.Model.countDocuments(this.fmtBean(bean)).exec();
   }
 
   /**
    * 根据条件删除
-   * @param condition
+   * @param bean
    * @return {Promise<any>}
    */
-  deleteByCondition(condition = {}) {
-    return this.Model.deleteMany(condition).exec();
+  deleteByCondition(bean = {}) {
+    return this.Model.deleteMany(this.fmtBean(bean)).exec();
   }
 
   /**
@@ -31,7 +32,7 @@ class BaseDao {
    */
   insert(bean) {
     return new Promise((resolve, reject) => {
-      new this.Model(bean).save((error) => {
+      new this.Model(this.fmtBean(bean)).save((error) => {
         if (error) {
           return reject(error);
         }
@@ -42,42 +43,56 @@ class BaseDao {
 
   /**
    * 根据条件获取一条数据
-   * @param condition
+   * @param bean
    * @returns {Promise<any>}
    */
-  getByCondition(condition) {
-    return this.Model.findOne(condition).exec();
+  getByCondition(bean) {
+    return this.Model.findOne(this.fmtBean(bean)).exec();
   }
 
 
   /**
    * 根据条件和分页器获取列表
-   * @param condition {Object} 条件
+   * @param bean {Object} 条件
    * @param pager {{pageSize: Number, currentPage: Number}} 分页器
    * @return {Promise<Array>}
    */
-  getListByConditionAndPager(condition = {}, pager = { pageSize: 20, currentPage: 1 }) {
+  getListByConditionAndPager(bean = {}, pager = { pageSize: 20, currentPage: 1 }) {
     const { pageSize, currentPage } = pager;
     const limit = pageSize;
     const skip = pageSize * (currentPage - 1);
 
-    return this.Model.find(condition).skip(skip).limit(limit).exec();
+    return this.Model.find(this.fmtBean(bean)).skip(skip).limit(limit).exec();
   }
 
   /**
    * 根据条件更新，只更新不为 null/undefined 的字段
-   * @param condition
+   * @param conditionBean
    * @param bean
    * @return {Promise<Array>}
    */
-  updateSelectiveByCondition(condition = {}, bean) {
+  async updateSelectiveByCondition(conditionBean = {}, bean) {
     const newBean = {};
     Object.keys(bean).forEach((key) => {
       if (bean[key] != null) {
         newBean[key] = bean[key];
       }
     });
-    return this.Model.updateMany(condition, newBean).exec();
+    return this.Model.updateOne(this.fmtBean(conditionBean), newBean).exec();
+  }
+  /**
+   * 格式化 bean，剔除掉 Model 中不存在的字段
+   * @param bean
+   */
+  fmtBean(bean) {
+    const newBean = {};
+    Object.keys(bean).forEach((prop) => {
+      if (this.bean[prop]) {
+        newBean[prop] = bean[prop];
+      }
+    });
+
+    return newBean;
   }
 }
 

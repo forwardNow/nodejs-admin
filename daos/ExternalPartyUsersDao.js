@@ -1,10 +1,9 @@
 const BaseDao = require('./BaseDao');
-const ExternalPartyUsersModel = require('../models/ExternalPartyUsersModel');
+const ExternalPartyUserBean = require('../beans/ExternalPartyUserBean');
 
 class ExternalPartyUsersDao extends BaseDao {
   constructor() {
-    super(ExternalPartyUsersModel);
-    this.model = ExternalPartyUsersModel;
+    super('ExternalPartyUsers', new ExternalPartyUserBean());
   }
 }
 
