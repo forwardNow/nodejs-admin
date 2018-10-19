@@ -1,6 +1,17 @@
-const RolesDao = require('../daos/RoleDao');
-const BaseRoute = require('./BaseRoute');
+const RoleDao = require('../daos/RoleDao');
+const BaseController = require('./BaseController');
 
-module.exports = (router) => {
-  BaseRoute.setBaseRoute('role', 'RoleId', router, RolesDao);
-};
+class RoleController extends BaseController {
+  constructor(router) {
+    super('role', 'RoleId', router, RoleDao);
+  }
+
+  /**
+   * @override
+   */
+  setRoute() {
+    console.log(this.path);
+  }
+}
+
+module.exports = RoleController;

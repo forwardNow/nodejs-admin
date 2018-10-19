@@ -80,6 +80,7 @@ class BaseDao {
     });
     return this.Model.updateOne(this.fmtBean(conditionBean), newBean).exec();
   }
+
   /**
    * 格式化 bean，剔除掉 Model 中不存在的字段
    * @param bean

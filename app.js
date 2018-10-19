@@ -1,5 +1,8 @@
-const express = require('express');
 const path = require('path');
+
+const log4js = require('log4js');
+
+const express = require('express');
 const expressArtTemplate = require('express-art-template');
 const bodyParser = require('body-parser');
 const expressJwt = require('express-jwt');
@@ -13,6 +16,9 @@ const app = express();
 
 // 签名
 const { JWT_SECRET, PREFIX_PATH } = require('./configs/var');
+
+const logger = log4js.getLogger();
+logger.level = 'debug';
 
 // 静态服务
 app.use('/public/', express.static(path.join(__dirname, './public/')));
@@ -69,8 +75,9 @@ app.use(
       });
     }
 
+    // 将用户数据挂载到 req.currentUser
     await UsersDao.getByCondition({ UserId: req.user.userId }).then((user) => {
-      req.User = user;
+      req.currentUser = user;
     });
 
     // TODO: 判断是否有权限
@@ -101,7 +108,7 @@ app.use((req, res) => {
 
 // 500：全局错误处理
 app.use((err, req, res, next) => {
-  console.log(err);
+  logger.error(err);
 
   if (err.name === 'TokenExpiredError' || err.name === 'UnauthorizedError') {
     res.status(200).json({
@@ -121,5 +128,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(3000, () => {
-  console.log('http://localhost:3000');
+  logger.debug('http://localhost:3000');
 });

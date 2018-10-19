@@ -15,9 +15,8 @@ function mountTo(app) {
     RoleController,
     UserController,
     SubSystemController,
-  ].forEach(item => item(router));
+  ].forEach(Constructor => new Constructor(router));
 
-  // console.log(router);
 
   app.use(router);
 }

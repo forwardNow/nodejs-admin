@@ -1,46 +1,66 @@
 const assert = require('assert');
 const uuidv1 = require('uuid/v1');
-const UsersDao = require('../daos/UserDao');
+const UserDao = require('../daos/UserDao');
 const ExternalPartyUsersDao = require('../daos/ExternalPartyUsersDao');
-const BaseRoute = require('./BaseRoute');
+const BaseController = require('./BaseController');
 
-module.exports = (router) => {
-  router.post('/api/user/delete', async (req, res) => {
-    const { body: user } = req;
+class UserController extends BaseController {
+  constructor(router) {
+    super('user', 'UserId', router, UserDao);
+  }
 
-    assert(user.UserId);
+  /**
+   * @override
+   */
+  setRoute() {
+    this.delete();
+    this.register();
+  }
 
-    await UsersDao.deleteByCondition({ UserId: user.UserId });
+  delete() {
+    const { router } = this;
 
-    await ExternalPartyUsersDao.deleteByCondition({ UserId: user.UserId });
+    router.post('/api/user/delete', async (req, res) => {
+      const { body: user } = req;
 
-    res.status(200).json({
-      errorCode: 0,
-      reason: 'OK',
+      assert(user.UserId);
+
+      await UserDao.deleteByCondition({ UserId: user.UserId });
+
+      await ExternalPartyUsersDao.deleteByCondition({ UserId: user.UserId });
+
+      res.status(200).json({
+        errorCode: 0,
+        reason: 'OK',
+      });
     });
-  });
+  }
 
-  router.post('/api/user/register', async (req, res) => {
-    const {
-      body: {
-        User,
-        ExternalPartyUser,
-      },
-    } = req;
+  register() {
+    const { router } = this;
 
-    const UserId = uuidv1();
-    const newUser = Object.assign({}, User, { UserId });
-    const newExternalPartyUser = Object.assign({}, ExternalPartyUser, { UserId });
+    router.post('/api/user/register', async (req, res) => {
+      const {
+        body: {
+          User,
+          ExternalPartyUser,
+        },
+      } = req;
 
-    await UsersDao.insert(newUser);
+      const UserId = uuidv1();
+      const newUser = Object.assign({}, User, { UserId });
+      const newExternalPartyUser = Object.assign({}, ExternalPartyUser, { UserId });
 
-    await ExternalPartyUsersDao.insert(newExternalPartyUser);
+      await UserDao.insert(newUser);
 
-    res.status(200).json({
-      errorCode: 0,
-      reason: 'OK',
+      await ExternalPartyUsersDao.insert(newExternalPartyUser);
+
+      res.status(200).json({
+        errorCode: 0,
+        reason: 'OK',
+      });
     });
-  });
+  }
+}
 
-  BaseRoute.setBaseRoute('user', 'UserId', router, UsersDao);
-};
+module.exports = UserController;

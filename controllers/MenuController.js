@@ -1,6 +1,17 @@
-const MenusDao = require('../daos/MenuDao');
-const BaseRoute = require('./BaseRoute');
+const MenuDao = require('../daos/MenuDao');
+const BaseController = require('./BaseController');
 
-module.exports = (router) => {
-  BaseRoute.setBaseRoute('menu', 'MenuId', router, MenusDao);
-};
+class MenuController extends BaseController {
+  constructor(router) {
+    super('menu', 'MenuId', router, MenuDao);
+  }
+
+  /**
+   * @override
+   */
+  setRoute() {
+    console.log(this.path);
+  }
+}
+
+module.exports = MenuController;

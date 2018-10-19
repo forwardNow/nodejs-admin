@@ -1,6 +1,17 @@
-const SubSystemsDao = require('../daos/SubSystemDao');
-const BaseRoute = require('./BaseRoute');
+const SubSystemDao = require('../daos/SubSystemDao');
+const BaseController = require('./BaseController');
 
-module.exports = (router) => {
-  BaseRoute.setBaseRoute('subsys', 'SystemId', router, SubSystemsDao);
-};
+class SubSystemController extends BaseController {
+  constructor(router) {
+    super('subsys', 'SystemId', router, SubSystemDao);
+  }
+
+  /**
+   * @override
+   */
+  setRoute() {
+    console.log(this.path);
+  }
+}
+
+module.exports = SubSystemController;
