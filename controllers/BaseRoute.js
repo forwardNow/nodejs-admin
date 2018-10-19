@@ -23,7 +23,7 @@ exports.setBaseRoute = (path, pkName, router, Dao) => {
       items: null,
       pager: { pageSize, currentPage },
     };
-    Dao.getListByConditionAndPager(condition, result.pager)
+    Dao.getListByConditionAndPager(newCondition, result.pager)
       .then((list) => {
         result.items = list;
         return Dao.getCountByCondition(condition);

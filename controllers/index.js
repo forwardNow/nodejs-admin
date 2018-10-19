@@ -4,10 +4,10 @@ const router = express.Router();
 
 const initRoute = require('./initRoute');
 const sessionRoute = require('./SessionController');
-const usersRoute = require('./UserRoute');
+const usersRoute = require('./UserController');
 const menusRoute = require('./MenuController');
 const rolesRoute = require('./RoleController');
-const subSystemsRoute = require('./SubSystemRoute');
+const subSystemsRoute = require('./SubSystemController');
 const dicRoute = require('./DicRoute');
 const externalPartyUsersRoute = require('./ExternalPartyUserRoute');
 
