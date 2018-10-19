@@ -1,9 +1,4 @@
-const path = require('path');
-
-const log4js = require('log4js');
-
 const express = require('express');
-const expressArtTemplate = require('express-art-template');
 const bodyParser = require('body-parser');
 const expressJwt = require('express-jwt');
 
@@ -15,19 +10,10 @@ const UsersDao = require('./daos/UserDao');
 const app = express();
 
 // 签名
-const { JWT_SECRET, PREFIX_PATH } = require('./configs/var');
+const { JWT_SECRET } = require('./configs/Var');
 
-const logger = log4js.getLogger();
-logger.level = 'debug';
+const { logger } = require('./utils/LogUtil');
 
-// 静态服务
-app.use('/public/', express.static(path.join(__dirname, './public/')));
-
-// 渲染引擎
-app.engine('html', expressArtTemplate);
-
-// 视图目录
-app.set('views', path.join(__dirname, './views/'));
 
 // 配置解析请求体插件（注意：一定要在挂载路由之前）
 // parse application/x-www-form-urlencoded
@@ -40,7 +26,7 @@ app.use(bodyParser.json());
  * expressJwt 将解码后的对象挂载到 req.user
  */
 app.use(
-  PREFIX_PATH,
+  '/api',
   expressJwt({
     secret: JWT_SECRET,
     credentialsRequired: false,
@@ -58,13 +44,14 @@ app.use(
   }).unless({
     // 除了这些地址，其他的URL都需要验证
     path: [
-      `${PREFIX_PATH}/session/login`,
-      `${PREFIX_PATH}/init`,
+      '/api/session/login',
+      '/api/init',
     ],
   }),
   async (req, res, next) => {
     // 当访问 /api/session/login 时，req.user === undefined
     if (!req.user) {
+      req.currentUser = {};
       return next();
     }
 
@@ -86,16 +73,14 @@ app.use(
   },
 );
 
-// 首页
-app.get('/', (req, res) => {
-  const { session: { user } } = req;
-  res.render('index.html', { user });
+
+// 日志
+app.use((req, res, next) => {
+  logger.info(`[User] ${req.currentUser.UserTrueName}  [Request] ${req.method} ${req.url}`);
+  next();
 });
 
-// 将路由挂载到 app
-// app.use(PREFIX_PATH, routes);
-
-// 挂载 router
+// 路由
 router.mountTo(app);
 
 // 404
@@ -108,9 +93,8 @@ app.use((req, res) => {
 
 // 500：全局错误处理
 app.use((err, req, res, next) => {
-  logger.error(err);
-
   if (err.name === 'TokenExpiredError' || err.name === 'UnauthorizedError') {
+    logger.info(`[Token] ${err.name}`);
     res.status(200).json({
       errorCode: 401,
       reason: 'jwt expired',
@@ -118,6 +102,8 @@ app.use((err, req, res, next) => {
 
     return next();
   }
+
+  logger.error(err);
 
   res.status(200).json({
     errorCode: 500,

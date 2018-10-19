@@ -4,13 +4,7 @@ const BaseController = require('./BaseController');
 class MenuController extends BaseController {
   constructor(router) {
     super('menu', 'MenuId', router, MenuDao);
-  }
-
-  /**
-   * @override
-   */
-  setRoute() {
-    console.log(this.path);
+    this.registerBaseRoutes();
   }
 }
 

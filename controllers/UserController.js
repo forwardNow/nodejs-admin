@@ -4,23 +4,35 @@ const UserDao = require('../daos/UserDao');
 const ExternalPartyUsersDao = require('../daos/ExternalPartyUsersDao');
 const BaseController = require('./BaseController');
 
+const { logger } = require('../utils/LogUtil');
+const { LOG_NS } = require('../configs/Var');
+
 class UserController extends BaseController {
   constructor(router) {
     super('user', 'UserId', router, UserDao);
+    this.registerRoute();
+    super.registerBaseRoutes();
   }
 
   /**
    * @override
    */
-  setRoute() {
+  registerRoute() {
     this.delete();
     this.register();
   }
 
+  /**
+   * 覆盖 base delete
+   */
   delete() {
     const { router } = this;
 
-    router.post('/api/user/delete', async (req, res) => {
+    const pattern = '/api/user/delete';
+
+    logger.info(`[${LOG_NS.ROUTER}]override: ${pattern}`);
+
+    router.post(pattern, async (req, res) => {
       const { body: user } = req;
 
       assert(user.UserId);
@@ -39,7 +51,11 @@ class UserController extends BaseController {
   register() {
     const { router } = this;
 
-    router.post('/api/user/register', async (req, res) => {
+    const pattern = '/api/user/register';
+
+    logger.info(`[${LOG_NS.ROUTER}]register: ${pattern}`);
+
+    router.post(pattern, async (req, res) => {
       const {
         body: {
           User,

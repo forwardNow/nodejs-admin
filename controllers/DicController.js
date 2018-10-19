@@ -1,9 +1,9 @@
-const RoleDao = require('../daos/RoleDao');
+const DicDao = require('../daos/DicDao');
 const BaseController = require('./BaseController');
 
 class RoleController extends BaseController {
   constructor(router) {
-    super('role', 'RoleId', router, RoleDao);
+    super('dic', 'DicId', router, DicDao);
     this.registerBaseRoutes();
   }
 }

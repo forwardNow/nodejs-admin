@@ -1,16 +1,11 @@
 const mongoose = require('mongoose');
 
+const { logger } = require('../utils/LogUtil');
+const { URI, OPTIONS } = require('../configs/MongodbConfig');
+const { LOG_NS } = require('../configs/Var');
+
 const MongodbUtil = {};
 let mongodbClient = null;
-
-const URI = 'mongodb://localhost/platform';
-
-const OPTIONS = {
-  useNewUrlParser: true,
-  poolSize: 5, // Maintain up to 5 socket connections
-  reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
-  reconnectInterval: 500, // Reconnect every 500ms
-};
 
 /**
  * 获取客户端
@@ -28,14 +23,14 @@ MongodbUtil.getClient = () => {
    * 连接成功回调
    */
   mongodbClient.on('connected', () => {
-    // console.log('Mongoose connected to ', URI);
+    logger.debug(`[${LOG_NS.DB}] connected to ${URI}`);
   });
 
   /*
    * 连接失败回调
    */
   mongodbClient.on('error', (err) => {
-    // console.log('Mongoose connection error: ', err);
+    logger.debug(`[${LOG_NS.DB}] connection error:  ${err}`);
     throw err;
   });
 
@@ -43,7 +38,7 @@ MongodbUtil.getClient = () => {
    * 关闭连接回调
    */
   mongodbClient.on('disconnected', () => {
-    // console.log('Mongoose disconnected');
+    logger.debug(`[${LOG_NS.DB}] disconnected`);
   });
 
   return mongodbClient;

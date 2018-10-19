@@ -1,33 +1,41 @@
 const assert = require('assert');
 
+const { logger } = require('../utils/LogUtil');
+const { LOG_NS } = require('../configs/Var');
+
 class BaseController {
   constructor(path, pkName, router, Dao) {
     this.path = path;
     this.pkName = pkName;
     this.router = router;
     this.Dao = Dao;
-
-    this.setRoute();
-    this.setBaseRoute();
   }
 
   /**
    * 设置的路由将优先 baseRoute
    */
-  setRoute() {
-    console.log(this.path);
+  registerBaseRoutes() {
+    this.registerListRoute();
+    this.registerGetRoute();
+    this.registerDeleteRoute();
+    this.registerInsertRoute();
+    this.registerUpdateRoute();
   }
 
-  setBaseRoute() {
+  /**
+   * 模糊查询，获取分页
+   * condition 中的所有属性将作为模糊查询的条件
+   */
+  registerListRoute() {
     const {
-      path, pkName, router, Dao,
+      path, router, Dao,
     } = this;
 
-    /**
-     * 模糊查询，获取分页
-     * condition 中的所有属性将作为模糊查询的条件
-     */
-    router.post(`/api/${path}/list`, (req, res) => {
+    const pattern = `/api/${path}/list`;
+
+    logger.info(`[${LOG_NS.ROUTER}]register: ${pattern}`);
+
+    router.post(pattern, (req, res) => {
       const {
         body: {
           condition,
@@ -62,11 +70,21 @@ class BaseController {
           });
         });
     });
+  }
 
-    /**
-     * 根据 PK 获取记录
-     */
-    router.post(`/api/${path}/get`, (req, res) => {
+  /**
+   * 根据 PK 获取记录
+   */
+  registerGetRoute() {
+    const {
+      path, pkName, router, Dao,
+    } = this;
+
+    const pattern = `/api/${path}/get`;
+
+    logger.info(`[${LOG_NS.ROUTER}]register: ${pattern}`);
+
+    router.post(pattern, (req, res) => {
       const { body: bean } = req;
 
       assert(bean[pkName]);
@@ -86,11 +104,21 @@ class BaseController {
         });
       });
     });
+  }
 
-    /**
-     * 插入
-     */
-    router.post(`/api/${path}/insert`, (req, res) => {
+  /**
+   * 插入
+   */
+  registerInsertRoute() {
+    const {
+      path, router, Dao,
+    } = this;
+
+    const pattern = `/api/${path}/insert`;
+
+    logger.info(`[${LOG_NS.ROUTER}]register: ${pattern}`);
+
+    router.post(pattern, (req, res) => {
       const { body: bean, currentUser } = req;
 
       bean.CreateTime = Date.now();
@@ -107,11 +135,21 @@ class BaseController {
           reason: '添加失败',
         }));
     });
+  }
 
-    /**
-     * 更新
-     */
-    router.post(`/api/${path}/update`, (req, res) => {
+  /**
+   * 更新
+   */
+  registerUpdateRoute() {
+    const {
+      path, pkName, router, Dao,
+    } = this;
+
+    const pattern = `/api/${path}/update`;
+
+    logger.info(`[${LOG_NS.ROUTER}]register: ${pattern}`);
+
+    router.post(pattern, (req, res) => {
       const { body: bean, currentUser } = req;
 
       assert(bean[pkName]);
@@ -130,11 +168,21 @@ class BaseController {
           reason: '更新失败',
         }));
     });
+  }
 
-    /**
-     * 删除
-     */
-    router.post(`/api/${path}/delete`, (req, res) => {
+  /**
+   * 删除
+   */
+  registerDeleteRoute() {
+    const {
+      path, pkName, router, Dao,
+    } = this;
+
+    const pattern = `/api/${path}/delete`;
+
+    logger.info(`[${LOG_NS.ROUTER}]register: ${pattern}`);
+
+    router.post(pattern, (req, res) => {
       const { body: bean } = req;
 
       assert(bean[pkName]);
