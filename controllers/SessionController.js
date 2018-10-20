@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const ExternalPartyUserDao = require('../daos/ExternalPartyUsersDao');
 const UserDao = require('../daos/UserDao');
-
+const { routeLogger } = require('../utils/LogUtil');
 // 签名
 const { JWT_SECRET } = require('../configs/Var');
 
@@ -18,6 +18,8 @@ class SessionController {
 
   login() {
     const { router } = this;
+
+    routeLogger.info('register: /api/session/login');
 
     router.post('/api/session/login', async (req, res, next) => {
       try {
@@ -77,6 +79,8 @@ class SessionController {
 
   logout() {
     const { router } = this;
+
+    routeLogger.info('register: /api/session/logout');
 
     // 登出
     router.post('/api/session/logout', (req, res) => {

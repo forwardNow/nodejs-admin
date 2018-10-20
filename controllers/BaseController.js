@@ -1,7 +1,6 @@
 const assert = require('assert');
 
-const { logger } = require('../utils/LogUtil');
-const { LOG_NS } = require('../configs/Var');
+const { routeLogger } = require('../utils/LogUtil');
 
 class BaseController {
   constructor(path, pkName, router, Dao) {
@@ -33,7 +32,7 @@ class BaseController {
 
     const pattern = `/api/${path}/list`;
 
-    logger.info(`[${LOG_NS.ROUTER}]register: ${pattern}`);
+    routeLogger.info(`register: ${pattern}`);
 
     router.post(pattern, (req, res) => {
       const {
@@ -82,7 +81,7 @@ class BaseController {
 
     const pattern = `/api/${path}/get`;
 
-    logger.info(`[${LOG_NS.ROUTER}]register: ${pattern}`);
+    routeLogger.info(`register: ${pattern}`);
 
     router.post(pattern, (req, res) => {
       const { body: bean } = req;
@@ -116,7 +115,7 @@ class BaseController {
 
     const pattern = `/api/${path}/insert`;
 
-    logger.info(`[${LOG_NS.ROUTER}]register: ${pattern}`);
+    routeLogger.info(`register: ${pattern}`);
 
     router.post(pattern, (req, res) => {
       const { body: bean, currentUser } = req;
@@ -147,7 +146,7 @@ class BaseController {
 
     const pattern = `/api/${path}/update`;
 
-    logger.info(`[${LOG_NS.ROUTER}]register: ${pattern}`);
+    routeLogger.info(`register: ${pattern}`);
 
     router.post(pattern, (req, res) => {
       const { body: bean, currentUser } = req;
@@ -180,7 +179,7 @@ class BaseController {
 
     const pattern = `/api/${path}/delete`;
 
-    logger.info(`[${LOG_NS.ROUTER}]register: ${pattern}`);
+    routeLogger.info(`register: ${pattern}`);
 
     router.post(pattern, (req, res) => {
       const { body: bean } = req;
