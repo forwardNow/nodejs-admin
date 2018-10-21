@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const { routeLogger } = require('../utils/LogUtil');
+const { logger, routeLogger } = require('../utils/LogUtil');
 
 class BaseController {
   constructor(path, pkName, router, Dao) {
@@ -129,10 +129,13 @@ class BaseController {
           errorCode: 0,
           reason: 'OK',
         }))
-        .catch(() => res.status(200).json({
-          errorCode: 1,
-          reason: '添加失败',
-        }));
+        .catch((e) => {
+          logger.error(e);
+          res.status(200).json({
+            errorCode: 1,
+            reason: '添加失败',
+          });
+        });
     });
   }
 
