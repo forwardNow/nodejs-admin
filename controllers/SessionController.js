@@ -23,10 +23,27 @@ class SessionController {
 
     router.post('/api/session/login', async (req, res, next) => {
       try {
-        const { body: bean } = req;
+        const {
+          body: {
+            ExternalIdentifier,
+            ExternalCredential,
+            ExternalIdentityType,
+          },
+        } = req;
         let externalPartyUser = null;
 
-        await ExternalPartyUserDao.getByCondition(bean)
+        if (!ExternalIdentityType) {
+          return res.status(200).json({
+            errorCode: 100102,
+            reason: 'ExternalIdentityType is required.',
+          });
+        }
+
+        await ExternalPartyUserDao
+          .getByCondition({
+            ExternalIdentifier,
+            ExternalCredential,
+          })
           .then((result) => {
             externalPartyUser = result;
           });
@@ -34,7 +51,7 @@ class SessionController {
         // 不存在
         if (!externalPartyUser) {
           return res.status(200).json({
-            errorCode: 1,
+            errorCode: 100101,
             reason: 'ExternalIdentifier or ExternalCredential is invalid.',
           });
         }
@@ -60,16 +77,46 @@ class SessionController {
           },
           JWT_SECRET,
           {
-            expiresIn: 60 * 30, // 秒到期时间
+            expiresIn: 60 * 60, // 秒到期时间
           },
         );
 
         res.setHeader('token', token);
 
+        const {
+          UserTrueName,
+          UserNickname,
+          UserHeadImage,
+          Sex,
+          Phone,
+          PeopleCategory,
+          Address,
+          Landline,
+          QqNumber,
+          Email,
+          MedicalName,
+          UnitName,
+        } = user;
+
         return res.status(200).json({
           errorCode: 0,
           reason: 'OK',
-          result: user,
+          result: {
+            ExternalIdentifier,
+            ExternalIdentityType,
+            UserTrueName,
+            UserNickname,
+            UserHeadImage,
+            Sex,
+            Phone,
+            PeopleCategory,
+            Address,
+            Landline,
+            QqNumber,
+            Email,
+            MedicalName,
+            UnitName,
+          },
         });
       } catch (e) {
         return next(e);

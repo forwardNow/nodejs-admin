@@ -185,15 +185,16 @@ token: xxxx
 
 | 方法 | URL        | 参数                       |
 | ---- | ---------- | -------------------------- |
-| POST | /api/session/login | clientName、clientPassword |
+| POST | /api/session/login | ExternalIdentityType、ExternalIdentifier、ExternalCredential |
 
 示例：
 
 ```json
 // POST /api/session/login
 {
-  "clientName": "admin",
-  "clientPassword": "7410"
+  "ExternalIdentifier": "admin",
+  "ExternalCredential": "7410",
+  "ExternalIdentityType": "1"
 }
 ```
 
@@ -206,22 +207,23 @@ token: xxxx
   "errorCode": 0,
   "reason": "OK",
   "result": {
-    "clientId": "1",
-    "clientName": "admin",
-    "clientPassword": "7410", // 明文存储密码
-    "createtime": "2018-09-17T02:14:18.523Z",
-    "modifiedtime": "2018-09-17T02:14:18.523Z",
-    "clientTrueName": "超级管理员",
-    "clientUserSex": -1,
-    "allowLogin": 1,
-    "clientUserIdCard": "",
-    "clientUserPhoneNum": "",
-    "clientUserEmail": "",
-    "createuserid": "",
-    "createusername": "",
-    "modifieduserid": "",
-    "modifiedusername": "",
-    "isdeleted": 0
+    // ExternalPartyUsers 表
+    "ExternalIdentifier": "admin",
+    "ExternalIdentityType": "1",
+
+    // Users 表
+    "UserTrueName": "超级管理员11",
+    "UserNickname": "哇哈哈2",
+    "UserHeadImage": "",
+    "Sex": "1",
+    "Phone": "18707122222",
+    "PeopleCategory": "", // 人员类别
+    "Address": "",
+    "Landline": "", // 座机
+    "QqNumber": "",
+    "Email": "",
+    "MedicalName": "", // 所属机构名称
+    "UnitName": "" // 单位名称
   }
 }
 ```
@@ -231,7 +233,14 @@ token: xxxx
 ```json
 {
   "errorCode": 100101,
-  "reason": "clientName or clientPassword is invalid."
+  "reason": "ExternalIdentifier or ExternalCredential is invalid."
+}
+```
+
+```json
+{
+  "errorCode": 100102,
+  "reason": "ExternalIdentityType is required."
 }
 ```
 

@@ -34,7 +34,7 @@ class BaseController {
 
     routeLogger.info(`register: ${pattern}`);
 
-    router.post(pattern, (req, res) => {
+    router.post(pattern, async (req, res) => {
       const {
         body: {
           condition,
@@ -55,19 +55,20 @@ class BaseController {
         items: null,
         pager: { pageSize, currentPage },
       };
-      Dao.getListByConditionAndPager(newCondition, result.pager)
-        .then((list) => {
-          result.items = list;
-          return Dao.getCountByCondition(condition);
-        })
+
+      await Dao.getListByConditionAndPager(newCondition, result.pager)
+        .then((list) => { result.items = list; });
+
+      await Dao.getCountByCondition(newCondition)
         .then((count) => {
           result.pager.total = count;
-          res.status(200).json({
-            errorCode: 0,
-            reason: 'OK',
-            result,
-          });
         });
+
+      res.status(200).json({
+        errorCode: 0,
+        reason: 'OK',
+        result,
+      });
     });
   }
 

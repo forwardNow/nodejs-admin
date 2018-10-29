@@ -22,6 +22,12 @@ class RoleBean extends BaseBean {
 
     /** 角色描述 */
     this.RoleDes = { type: String, default: '' };
+
+    /** 子系统权限，一个角色只能归属于一个子系统 */
+    this.SystemId = { type: String, default: '' };
+
+    /** 菜单权限 */
+    this.MenuIds = { type: Array, default: [] };
   }
 }
 

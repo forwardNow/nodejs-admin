@@ -41,7 +41,7 @@ class UserBean extends BaseBean {
     /** 所属实施机构 */
     this.MedicalCode = { type: String, default: '' };
 
-    /** 实施机构名称 */
+    /** 所属机构名称 */
     this.MedicalName = { type: String, default: '' };
 
     /** 单位编码 */
@@ -49,6 +49,9 @@ class UserBean extends BaseBean {
 
     /** 单位名称 */
     this.UnitName = { type: String, default: '' };
+
+    /** 拥有的角色 */
+    this.RoleIds = { type: Array, default: [] };
   }
 }
 

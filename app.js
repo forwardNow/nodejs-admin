@@ -14,12 +14,20 @@ const { JWT_SECRET } = require('./configs/Var');
 
 const { logger } = require('./utils/LogUtil');
 
+// 模板引擎
+app.engine('html', require('express-art-template'));
+
+app.set('views', './');
 
 // 配置解析请求体插件（注意：一定要在挂载路由之前）
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
+
+app.get('/', (req, res) => {
+  res.render('README.html');
+});
 
 /*
  * 接口服务：以 '/api' 打头的 url 都需要认证
