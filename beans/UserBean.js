@@ -38,7 +38,7 @@ class UserBean extends BaseBean {
     /** 电子邮箱 */
     this.Email = { type: String, default: '' };
 
-    /** 所属实施机构 */
+    /** 所属机构机构 */
     this.MedicalCode = { type: String, default: '' };
 
     /** 所属机构名称 */
