@@ -14,6 +14,9 @@ const { JWT_SECRET } = require('./configs/Var');
 
 const { logger } = require('./utils/LogUtil');
 
+// 静态服务
+app.use('/docs/', express.static('./docs/'));
+
 // 模板引擎
 app.engine('html', require('express-art-template'));
 
@@ -84,6 +87,9 @@ app.use(
 
 // 日志
 app.use((req, res, next) => {
+  if (!req.currentUser) {
+    req.currentUser = { UserTrueName: 'anno' };
+  }
   logger.info(`[User] ${req.currentUser.UserTrueName}  [Request] ${req.method} ${req.url}`);
   next();
 });
