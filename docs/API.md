@@ -6,12 +6,12 @@
 
 ## 2. 功能模块列表
 
-|模块标识符|描述|
+|模块标识符|模块编码|描述|
 |-|-|
-| `session` | 会话相关 |
-| `user` | 用户 |
-| `externalPartyUser` | 登陆用户 |
-| `subsys` | 子系统 |
-| `role` | 角色 |
-| `menu` | 菜单 |
-| `dic` | 字典 |
+| `session` |10| 会话相关 |
+| `user` |11| 用户 |
+| `externalPartyUser` |12| 登陆用户 |
+| `subsys` |13| 子系统 |
+| `role` |14| 角色 |
+| `menu` |15| 菜单 |
+| `dic` |16| 字典 |
