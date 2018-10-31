@@ -6,6 +6,8 @@ const BaseController = require('./BaseController');
 
 const { routeLogger } = require('../utils/LogUtil');
 
+const { PREFIX } = require('../configs/Var');
+
 class UserController extends BaseController {
   constructor(router) {
     super('user', 'UserId', router, UserDao);
@@ -27,7 +29,7 @@ class UserController extends BaseController {
   delete() {
     const { router } = this;
 
-    const pattern = '/api/user/delete';
+    const pattern = `${PREFIX}/user/delete`;
 
     routeLogger.info(`override: ${pattern}`);
 
@@ -50,7 +52,7 @@ class UserController extends BaseController {
   register() {
     const { router } = this;
 
-    const pattern = '/api/user/register';
+    const pattern = `${PREFIX}/user/register`;
 
     routeLogger.info(`register: ${pattern}`);
 

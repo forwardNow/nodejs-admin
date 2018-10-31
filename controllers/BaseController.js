@@ -2,6 +2,8 @@ const assert = require('assert');
 
 const { logger, routeLogger } = require('../utils/LogUtil');
 
+const { PREFIX } = require('../configs/Var');
+
 class BaseController {
   constructor(path, pkName, router, Dao) {
     this.path = path;
@@ -30,7 +32,7 @@ class BaseController {
       path, router, Dao,
     } = this;
 
-    const pattern = `/api/${path}/list`;
+    const pattern = `${PREFIX}/${path}/list`;
 
     routeLogger.info(`register: ${pattern}`);
 
@@ -80,7 +82,7 @@ class BaseController {
       path, pkName, router, Dao,
     } = this;
 
-    const pattern = `/api/${path}/get`;
+    const pattern = `${PREFIX}/${path}/get`;
 
     routeLogger.info(`register: ${pattern}`);
 
@@ -114,7 +116,7 @@ class BaseController {
       path, router, Dao,
     } = this;
 
-    const pattern = `/api/${path}/insert`;
+    const pattern = `${PREFIX}/${path}/insert`;
 
     routeLogger.info(`register: ${pattern}`);
 
@@ -148,7 +150,7 @@ class BaseController {
       path, pkName, router, Dao,
     } = this;
 
-    const pattern = `/api/${path}/update`;
+    const pattern = `${PREFIX}/${path}/update`;
 
     routeLogger.info(`register: ${pattern}`);
 
@@ -181,7 +183,7 @@ class BaseController {
       path, pkName, router, Dao,
     } = this;
 
-    const pattern = `/api/${path}/delete`;
+    const pattern = `${PREFIX}/${path}/delete`;
 
     routeLogger.info(`register: ${pattern}`);
 

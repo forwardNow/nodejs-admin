@@ -10,7 +10,7 @@ const UsersDao = require('./daos/UserDao');
 const app = express();
 
 // 签名
-const { JWT_SECRET } = require('./configs/Var');
+const { JWT_SECRET, PREFIX } = require('./configs/Var');
 
 const { logger } = require('./utils/LogUtil');
 
@@ -37,7 +37,7 @@ app.get('/', (req, res) => {
  * expressJwt 将解码后的对象挂载到 req.user
  */
 app.use(
-  '/api',
+  PREFIX,
   expressJwt({
     secret: JWT_SECRET,
     credentialsRequired: false,
@@ -55,8 +55,8 @@ app.use(
   }).unless({
     // 除了这些地址，其他的URL都需要验证
     path: [
-      '/api/session/login',
-      '/api/init',
+      `${PREFIX}/session/login`,
+      `${PREFIX}/init`,
     ],
   }),
   async (req, res, next) => {

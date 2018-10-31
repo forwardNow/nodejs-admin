@@ -3,7 +3,7 @@ const ExternalPartyUserDao = require('../daos/ExternalPartyUsersDao');
 const UserDao = require('../daos/UserDao');
 const { routeLogger } = require('../utils/LogUtil');
 // 签名
-const { JWT_SECRET } = require('../configs/Var');
+const { JWT_SECRET, PREFIX } = require('../configs/Var');
 
 class SessionController {
   constructor(router) {
@@ -19,9 +19,9 @@ class SessionController {
   login() {
     const { router } = this;
 
-    routeLogger.info('register: /api/session/login');
+    routeLogger.info(`register: ${PREFIX}/session/login`);
 
-    router.post('/api/session/login', async (req, res, next) => {
+    router.post(`${PREFIX}/session/login`, async (req, res, next) => {
       try {
         const {
           body: {
@@ -127,10 +127,10 @@ class SessionController {
   logout() {
     const { router } = this;
 
-    routeLogger.info('register: /api/session/logout');
+    routeLogger.info(`register: ${PREFIX}/session/logout`);
 
     // 登出
-    router.post('/api/session/logout', (req, res) => {
+    router.post(`${PREFIX}/session/logout`, (req, res) => {
       // registerDeleteRoute req.session.user;
 
       res.setHeader('token', 'none');
