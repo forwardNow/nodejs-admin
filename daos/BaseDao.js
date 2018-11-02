@@ -88,7 +88,7 @@ class BaseDao {
   fmtBean(bean) {
     const newBean = {};
     Object.keys(bean).forEach((prop) => {
-      if (this.bean[prop]) {
+      if (prop in this.bean) {
         newBean[prop] = bean[prop];
       }
     });

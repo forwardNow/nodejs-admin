@@ -4,6 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
+    "doc": "gitbook serve . ./docs/book",
     "test": "mocha --timeout 10000 tests/unit/**/*.test.js"
   },
   "keywords": [],
@@ -30,6 +32,9 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1",
+    "gitbook-cli": "^2.3.2",
+    "gitbook-plugin-expandable-chapters-interactive": "^0.1.0",
+    "gitbook-plugin-splitter": "0.0.8",
     "mocha": "^5.2.0"
   }
 }

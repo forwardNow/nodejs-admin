@@ -1,11 +1,11 @@
 const uuidv1 = require('uuid/v1');
 const BaseBean = require('./BaseBean');
 
-class UserBean extends BaseBean {
+class MenuBean extends BaseBean {
   constructor() {
     super();
     /** 主键ID */
-    this.SystemId = { type: String, required: true, default: uuidv1 };
+    this.MenuId = { type: String, required: true, default: uuidv1 };
 
     /** 菜单编码 */
     this.MenuNo = { type: String, default: '' };
@@ -39,4 +39,4 @@ class UserBean extends BaseBean {
   }
 }
 
-module.exports = UserBean;
+module.exports = MenuBean;

@@ -91,7 +91,7 @@ class BaseController {
 
       assert(bean[pkName]);
 
-      Dao.getByCondition({ pkName: bean[pkName] }).then((data) => {
+      Dao.getByCondition({ [pkName]: bean[pkName] }).then((data) => {
         // 找到了
         if (data) {
           return res.status(200).json({
@@ -163,7 +163,7 @@ class BaseController {
       bean.ModifiedUserId = currentUser.UserId;
       bean.ModifiedUserName = currentUser.UserTrueName;
 
-      Dao.updateSelectiveByCondition({ pkName: bean[pkName] }, bean)
+      Dao.updateSelectiveByCondition({ [pkName]: bean[pkName] }, bean)
         .then(() => res.status(200).json({
           errorCode: 0,
           reason: 'OK',
