@@ -1,5 +1,6 @@
 const express = require('express');
 
+const initRoute = require('./controllers/initRoute');
 const SessionController = require('./controllers/SessionController');
 const MenuController = require('./controllers/MenuController');
 const RoleController = require('./controllers/RoleController');
@@ -21,6 +22,7 @@ function mountTo(app) {
     DicItemController,
   ].forEach(Constructor => new Constructor(router));
 
+  initRoute(router);
 
   app.use(router);
 }
