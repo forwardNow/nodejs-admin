@@ -10,7 +10,7 @@ const UsersDao = require('./daos/UserDao');
 const app = express();
 
 // 签名
-const { JWT_SECRET, PREFIX } = require('./configs/Var');
+const { JWT_SECRET, PREFIX, PORT } = require('./configs/Var');
 
 const { logger } = require('./utils/LogUtil');
 
@@ -127,6 +127,6 @@ app.use((err, req, res, next) => {
   return next();
 });
 
-app.listen(3000, () => {
-  logger.debug('http://localhost:3000');
+app.listen(PORT, () => {
+  logger.debug(`http://localhost:${PORT}`);
 });

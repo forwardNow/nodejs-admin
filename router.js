@@ -1,6 +1,6 @@
 const express = require('express');
 
-const initRoute = require('./controllers/initRoute');
+const InitController = require('./controllers/InitController');
 const SessionController = require('./controllers/SessionController');
 const MenuController = require('./controllers/MenuController');
 const RoleController = require('./controllers/RoleController');
@@ -13,6 +13,7 @@ const router = express.Router(null);
 
 function mountTo(app) {
   [
+    InitController,
     SessionController,
     MenuController,
     RoleController,
@@ -21,8 +22,6 @@ function mountTo(app) {
     DicController,
     DicItemController,
   ].forEach(Constructor => new Constructor(router));
-
-  initRoute(router);
 
   app.use(router);
 }

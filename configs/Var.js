@@ -4,4 +4,13 @@ module.exports = {
 
   /** API 前缀 */
   PREFIX: '/api',
+
+  /** 服务端口号 */
+  PORT: 3000,
+
+  /** 默认用户，初始用 */
+  DEFAULT_USER: {
+    LOGIN_NAME: 'admin',
+    LOGIN_PASSWORD: '123456',
+  },
 };
