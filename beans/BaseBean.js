@@ -20,6 +20,9 @@ class BaseBean {
 
     /** 注销标记：（1-注销；0-未注销） */
     this.IsDeleted = { type: Number, default: 0 };
+
+    /** 保留字段 */
+    this.reserve = { type: String, default: '' };
   }
 }
 
