@@ -1,5 +1,3 @@
-const assert = require('assert');
-
 const { logger, routeLogger } = require('../utils/LogUtil');
 
 const { PREFIX } = require('../configs/Var');
@@ -89,7 +87,9 @@ class BaseController {
     router.post(pattern, (req, res) => {
       const { body: bean } = req;
 
-      assert(bean[pkName]);
+      if (!bean[pkName]) {
+        throw new Error(`[${pattern}] requires PK: ${pkName}`);
+      }
 
       Dao.getByCondition({ [pkName]: bean[pkName] }).then((data) => {
         // 找到了
@@ -157,7 +157,9 @@ class BaseController {
     router.post(pattern, (req, res) => {
       const { body: bean, currentUser } = req;
 
-      assert(bean[pkName]);
+      if (!bean[pkName]) {
+        throw new Error(`[${pattern}] requires PK: ${pkName}`);
+      }
 
       bean.ModifiedTime = Date.now();
       bean.ModifiedUserId = currentUser.UserId;
@@ -190,7 +192,9 @@ class BaseController {
     router.post(pattern, (req, res) => {
       const { body: bean } = req;
 
-      assert(bean[pkName]);
+      if (!bean[pkName]) {
+        throw new Error(`[${pattern}] requires PK: ${pkName}`);
+      }
 
       Dao.deleteByCondition(bean)
         .then(() => res.status(200).json({
