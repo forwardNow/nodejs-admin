@@ -207,10 +207,9 @@ class BaseController {
 
       Dao.deleteByCondition(bean)
         .then(() => res.status(200).json({
-            errorCode: 0,
-            reason: 'OK',
-          }
-        )
+          errorCode: 0,
+          reason: 'OK',
+        }))
         .catch(() => res.status(200).json({
           errorCode: 1,
           reason: '删除失败',
