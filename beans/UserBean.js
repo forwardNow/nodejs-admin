@@ -6,7 +6,7 @@ class UserBean extends BaseBean {
     super();
 
     /** 用户ID */
-    this.UserId = { type: String, required: true, default: uuidv1 };
+    this.UserId = { type: String, required: true };
 
     /** 姓名 */
     this.UserTrueName = { type: String, default: '' };

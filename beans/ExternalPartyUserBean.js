@@ -1,4 +1,3 @@
-const uuidv1 = require('uuid/v1');
 const BaseBean = require('./BaseBean');
 
 class ExternalPartyUserBean extends BaseBean {
@@ -6,7 +5,7 @@ class ExternalPartyUserBean extends BaseBean {
     super();
 
     /** 主键ID */
-    this.ExternalPartyId = { type: String, default: uuidv1 };
+    this.ExternalPartyId = { type: String, required: true };
 
     /** 用户ID */
     this.UserId = { type: String, default: '' };

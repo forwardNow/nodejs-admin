@@ -1,4 +1,3 @@
-const uuidv1 = require('uuid/v1');
 const BaseBean = require('./BaseBean');
 
 class SubSystemBean extends BaseBean {
@@ -6,7 +5,7 @@ class SubSystemBean extends BaseBean {
     super();
 
     /** 主键ID */
-    this.SystemId = { type: String, required: true, default: uuidv1 };
+    this.SystemId = { type: String, required: true };
 
     /** 系统名称 */
     this.SystemName = { type: String, default: '' };

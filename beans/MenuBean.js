@@ -1,11 +1,10 @@
-const uuidv1 = require('uuid/v1');
 const BaseBean = require('./BaseBean');
 
 class MenuBean extends BaseBean {
   constructor() {
     super();
     /** 主键ID */
-    this.MenuId = { type: String, required: true, default: uuidv1 };
+    this.MenuId = { type: String, required: true };
 
     /** 菜单编码 */
     this.MenuNo = { type: String, default: '' };

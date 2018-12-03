@@ -1,4 +1,3 @@
-const uuidv1 = require('uuid/v1');
 const BaseBean = require('./BaseBean');
 
 class RoleBean extends BaseBean {
@@ -6,7 +5,7 @@ class RoleBean extends BaseBean {
     super();
 
     /** 角色ID */
-    this.RoleId = { type: String, required: true, default: uuidv1 };
+    this.RoleId = { type: String, required: true };
 
     /** 角色名称 */
     this.RoleName = { type: String, default: '' };
