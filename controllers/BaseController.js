@@ -1,3 +1,5 @@
+const uuidv1 = require('uuid/v1');
+
 const { logger, routeLogger } = require('../utils/LogUtil');
 
 const { PREFIX } = require('../configs/Var');
@@ -57,7 +59,9 @@ class BaseController {
       };
 
       await Dao.getListByConditionAndPager(newCondition, result.pager)
-        .then((list) => { result.items = list; });
+        .then((list) => {
+          result.items = list;
+        });
 
       await Dao.getCountByCondition(newCondition)
         .then((count) => {
@@ -113,7 +117,7 @@ class BaseController {
    */
   registerInsertRoute() {
     const {
-      path, router, Dao,
+      pkName, path, router, Dao,
     } = this;
 
     const pattern = `${PREFIX}/${path}/insert`;
@@ -122,6 +126,11 @@ class BaseController {
 
     router.post(pattern, (req, res) => {
       const { body: bean, currentUser } = req;
+
+      // 无 PK，则赋值
+      if (!bean[pkName]) {
+        bean[pkName] = uuidv1();
+      }
 
       bean.CreateTime = Date.now();
       bean.CreateUserId = currentUser.UserId;
@@ -198,9 +207,10 @@ class BaseController {
 
       Dao.deleteByCondition(bean)
         .then(() => res.status(200).json({
-          errorCode: 0,
-          reason: 'OK',
-        }))
+            errorCode: 0,
+            reason: 'OK',
+          }
+        )
         .catch(() => res.status(200).json({
           errorCode: 1,
           reason: '删除失败',
