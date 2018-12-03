@@ -22,7 +22,21 @@ class BaseDao {
    * @return {Promise<any>}
    */
   deleteByCondition(bean = {}) {
-    return this.Model.deleteMany(this.fmtBean(bean)).exec();
+    return this.Model.deleteMany(this.fmtBean(bean)).exec().then((res) => {
+      const { n, ok } = res;
+
+      if (ok !== 1) {
+        return Promise.reject(new Error('删除失败'));
+      }
+
+      if (n === 0) {
+        return Promise.reject(new Error('未匹配到记录'));
+      }
+
+      if (n > 0) {
+        return Promise.resolve('ok');
+      }
+    });
   }
 
   /**
@@ -78,7 +92,22 @@ class BaseDao {
         newBean[key] = bean[key];
       }
     });
-    return this.Model.updateOne(this.fmtBean(conditionBean), newBean).exec();
+    return this.Model.updateOne(this.fmtBean(conditionBean), newBean).exec().then((res) => {
+      // { n: 1, nModified: 1, ok: 1 }
+      const { n, ok } = res;
+
+      if (ok !== 1) {
+        return Promise.reject(new Error('更新失败'));
+      }
+
+      if (n === 0) {
+        return Promise.reject(new Error('未匹配到记录'));
+      }
+
+      if (n > 0) {
+        return Promise.resolve('ok');
+      }
+    });
   }
 
   /**
