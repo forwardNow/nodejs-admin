@@ -36,6 +36,7 @@ describe('test /daos/UsersDao.js', () => {
     { UserTrueName: '张三' },
     { UserTrueName: '张三三' },
   ).then((res) => {
+    console.log(res);
     expect(res).to.not.equal(null);
   }));
 
