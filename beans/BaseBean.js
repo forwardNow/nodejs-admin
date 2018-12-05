@@ -1,7 +1,7 @@
 class BaseBean {
   constructor() {
     /** 新增时间 */
-    this.CreateTime = { type: Date, default: Date.now };
+    this.CreateTime = { type: Date };
 
     /** 新增人编号 */
     this.CreateUserId = { type: String, default: '' };
@@ -10,7 +10,7 @@ class BaseBean {
     this.CreateUserName = { type: String, default: '' };
 
     /** 修改时间 */
-    this.ModifiedTime = { type: Date, default: Date.now };
+    this.ModifiedTime = { type: Date };
 
     /** 修改人编号 */
     this.ModifiedUserId = { type: String, default: '' };
