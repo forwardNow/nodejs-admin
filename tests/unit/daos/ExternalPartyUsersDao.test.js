@@ -1,7 +1,7 @@
 const uuidv1 = require('uuid/v1');
 const { expect } = require('chai');
-const ExternalPartyUsersDao = require('../../../daos/ExternalPartyUsersDao');
-const UsersDao = require('../../../daos/UserDao');
+const ExternalPartyUsersDao = require('../../../system/daos/ExternalPartyUsersDao');
+const UsersDao = require('../../../system/daos/UserDao');
 
 const id1 = uuidv1();
 const id2 = uuidv1();

@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "cd src && node app.js",
     "doc": "gitbook serve . ./docs/book",
     "test": "mocha --timeout 10000 tests/unit/**/*.test.js"
   },

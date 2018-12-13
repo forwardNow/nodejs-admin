@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const MongodbUtil = require('../../../utils/MongodbUtil');
+const MongodbUtil = require('../../../src/common/utils/MongodbUtil');
 
 describe('test /utils/MongodbUtil.js', () => {
   it('connect to Mongodb', () => {
