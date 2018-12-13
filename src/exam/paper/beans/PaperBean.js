@@ -15,6 +15,9 @@ class PaperBean extends BaseBean {
     /** 标题 */
     this.title = { type: String, required: true };
 
+    /** 附加文字 */
+    this.aside = { type: String, default: '' };
+
     /** 描述 */
     this.desc = { type: String, default: '' };
   }

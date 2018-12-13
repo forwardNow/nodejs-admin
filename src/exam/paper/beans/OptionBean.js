@@ -12,12 +12,7 @@ class OptionBean extends BaseBean {
     /** 类别 */
     this.category = { type: Number, required: true };
 
-    /**
-     * 编码
-     * @example
-     * 'A', 'B', 'C', 'D'
-     * '1', '2', '3', '4'
-     */
+    /** 编码 */
     this.code = { type: String, required: true };
 
     /** 内容 */

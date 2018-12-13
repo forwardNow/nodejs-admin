@@ -29,6 +29,7 @@ Paper -------> Question -------> Option ---|
 | code  | String | required    | 编码       |
 | name  | String | required    | 名称       |
 | title | String | required    | 标题       |
+| aside | String |             | 附加文字   |
 | desc  | String | default: '' | 描述       |
 
 ### 1.2. Question （问题）
@@ -205,3 +206,7 @@ Option 表：
 | `1`      | `"A"` | `"A. 中石油"`         | `3`   | `q-5-2`        |
 | `1`      | `"B"` | `"B. 中石化"`         | `4`   | `q-5-2`        |
 | `1`      | `"C"` | `"C. 社会单位"`       | `5`   | `q-5-2`        |
+
+## 3. 参考
+
+* [两列自适应布局方案整理](https://segmentfault.com/a/1190000004424442)

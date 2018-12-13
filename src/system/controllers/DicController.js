@@ -1,11 +1,11 @@
 const DicDao = require('../daos/DicDao');
 const BaseController = require('../../common/controllers/BaseController');
 
-class RoleController extends BaseController {
+class DicController extends BaseController {
   constructor(router) {
     super('dic', 'DicId', router, DicDao);
     this.registerBaseRoutes();
   }
 }
 
-module.exports = RoleController;
+module.exports = DicController;
