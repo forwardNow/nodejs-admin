@@ -10,5 +10,5 @@
 
 ## 3. 文档
 
+* 在线：[https://forwardNow.github.io/nodejs-admin/book](https://forwardNow.github.io/nodejs-admin/book)
 * Markdown：[./docs/SUMMARY.md](./docs/SUMMARY.md)
-* 在线：[https://forwardNow.github.io/nodejs-admin/docs/book](https://forwardNow.github.io/nodejs-admin/docs/book)
