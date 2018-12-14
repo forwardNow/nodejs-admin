@@ -15,10 +15,10 @@
 表关系：
 
 ```text
-                                self-referencing
-                                   |-------|
-        1:n               1:n      ↓       |
-Paper -------> Question -------> Option ---|
+                  self-referencing
+                     |-----|
+           1:n       ↓     |      1:n
+Paper ------------> Question ------------> Option
 ```
 
 ### 1.1. Paper （问卷）

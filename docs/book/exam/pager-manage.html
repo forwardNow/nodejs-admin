@@ -323,10 +323,10 @@
 </tbody>
 </table>
 <p>&#x8868;&#x5173;&#x7CFB;&#xFF1A;</p>
-<pre><code class="lang-text">                                self-referencing
-                                   |-------|
-        1:n               1:n      &#x2193;       |
-Paper -------&gt; Question -------&gt; Option ---|
+<pre><code class="lang-text">                  self-referencing
+                     |-----|
+           1:n       &#x2193;     |      1:n
+Paper ------------&gt; Question ------------&gt; Option
 </code></pre>
 <h3 id="11-paper-&#xFF08;&#x95EE;&#x5377;&#xFF09;">1.1. Paper &#xFF08;&#x95EE;&#x5377;&#xFF09;</h3>
 <table>
@@ -362,6 +362,12 @@ Paper -------&gt; Question -------&gt; Option ---|
 <td>String</td>
 <td>required</td>
 <td>&#x6807;&#x9898;</td>
+</tr>
+<tr>
+<td>aside</td>
+<td>String</td>
+<td></td>
+<td>&#x9644;&#x52A0;&#x6587;&#x5B57;</td>
 </tr>
 <tr>
 <td>desc</td>
@@ -893,6 +899,10 @@ Paper -------&gt; Question -------&gt; Option ---|
 </tr>
 </tbody>
 </table>
+<h2 id="3-&#x53C2;&#x8003;">3. &#x53C2;&#x8003;</h2>
+<ul>
+<li><a href="https://segmentfault.com/a/1190000004424442" target="_blank">&#x4E24;&#x5217;&#x81EA;&#x9002;&#x5E94;&#x5E03;&#x5C40;&#x65B9;&#x6848;&#x6574;&#x7406;</a></li>
+</ul>
 
                                 
                                 </section>
@@ -928,7 +938,7 @@ Paper -------&gt; Question -------&gt; Option ---|
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"问卷管理","level":"2.2.1","depth":2,"previous":{"title":"问卷调查","level":"2.2","depth":1,"ref":"","articles":[{"title":"问卷管理","level":"2.2.1","depth":2,"path":"exam/pager-manage.md","ref":"./exam/pager-manage.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["expandable-chapters-interactive","splitter","livereload"],"root":"./docs/","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"splitter":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"expandable-chapters-interactive":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","author":"吴钦飞","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"基础数据支撑平台（系统）文档","gitbook":"*","description":"文档"},"file":{"path":"exam/pager-manage.md","mtime":"2018-12-13T04:40:31.191Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-12-13T04:43:18.403Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"问卷管理","level":"2.2.1","depth":2,"previous":{"title":"问卷调查","level":"2.2","depth":1,"ref":"","articles":[{"title":"问卷管理","level":"2.2.1","depth":2,"path":"exam/pager-manage.md","ref":"./exam/pager-manage.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["expandable-chapters-interactive","splitter","livereload"],"root":"./docs/","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"splitter":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"expandable-chapters-interactive":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","author":"吴钦飞","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"基础数据支撑平台（系统）文档","gitbook":"*","description":"文档"},"file":{"path":"exam/pager-manage.md","mtime":"2018-12-14T07:50:21.591Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-12-14T08:01:31.652Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
