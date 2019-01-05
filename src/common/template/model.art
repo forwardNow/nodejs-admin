@@ -1,0 +1,5 @@
+{ {{each beanProps prop index}}
+  /** {{prop.comment}} */
+  {{prop.meta.name}}: { type: {{prop.meta.type}}, {{if prop.meta.primaryKey}}primaryKey: {{prop.meta.primaryKey}}, {{/if}}{{if prop.meta.autoIncrement}}autoIncrement: {{prop.meta.autoIncrement}}, {{/if}}allowNull: {{prop.meta.allowNull}} },
+{{/each}}
+}
