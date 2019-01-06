@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
 const _ = require('lodash');
-const BaseService = require('../../common/base/BaseService');
+const BaseService = require('{{data.relativePath}}common/base/BaseService');
 const {{data.className}}Dao = require('./{{data.moduleName}}.dao');
 
 class {{data.className}}Service extends BaseService {
@@ -13,6 +13,12 @@ class {{data.className}}Service extends BaseService {
    */
   getPageResult(condition, pager) {
     const newCondition = _.merge({}, condition);
+
+    Reflect.ownKeys(newCondition).forEach((key) => {
+      if (newCondition[key] === '') {
+        delete newCondition[key];
+      }
+    });
 
     // if ('organName' in newCondition) {
     //   newCondition.organName = {

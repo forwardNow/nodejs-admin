@@ -14,6 +14,12 @@ class OrgService extends BaseService {
   getPageResult(condition, pager) {
     const newCondition = _.merge({}, condition);
 
+    Reflect.ownKeys(newCondition).forEach((key) => {
+      if (newCondition[key] === '') {
+        delete newCondition[key];
+      }
+    });
+
     if ('organName' in newCondition) {
       newCondition.organName = {
         [Op.like]: `%${newCondition.organName}%`,

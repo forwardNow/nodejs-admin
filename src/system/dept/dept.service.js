@@ -14,6 +14,12 @@ class DeptService extends BaseService {
   getPageResult(condition, pager) {
     const newCondition = _.merge({}, condition);
 
+    Reflect.ownKeys(newCondition).forEach((key) => {
+      if (newCondition[key] === '') {
+        delete newCondition[key];
+      }
+    });
+
     if ('deptName' in newCondition) {
       newCondition.deptName = {
         [Op.like]: `%${newCondition.deptName}%`,

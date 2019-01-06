@@ -1,4 +1,4 @@
-const BaseController = require('../../common/base/BaseController');
+const BaseController = require('{{data.relativePath}}common/base/BaseController');
 const service = require('./{{data.moduleName}}.service');
 
 const moduleName = '{{data.moduleName}}';

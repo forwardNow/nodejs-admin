@@ -1,4 +1,6 @@
-const { Sequelize } = require('../../common/utils/MySqlUtil');
+const Sequelize = require('sequelize');
+
+// table: {{data[0].meta.tbName}}
 
 module.exports = {
 {{each data prop index}}  /** {{prop.comment}} */

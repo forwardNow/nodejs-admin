@@ -6,8 +6,17 @@ const fs = require('fs');
 const { database } = require('../configs/db.config');
 const { sequelize, closeConnection } = require('./MySqlUtil');
 
-const tplDir = path.join(__dirname, '../template');
-const bizDir = path.join(__dirname, '../../');
+/**
+ * art template 模板目录的绝对路径（${root}/src/common/template）
+ * @type {string}
+ */
+const templateDirAbsPath = path.join(__dirname, '../template');
+
+/**
+ * 业务模块所在目录的绝对路径（${root}/src/）
+ * @type {string}
+ */
+const bizDirAbsPath = path.join(__dirname, '../../');
 
 /**
  * 获取数据库表结构模型
@@ -15,15 +24,15 @@ const bizDir = path.join(__dirname, '../../');
  * @param tbName
  * @return {Promise<Array>}
  */
-async function getModel(dbName, tbName) {
+async function getTbCols(dbName, tbName) {
   const sql = `
-    SELECT COLUMN_NAME, COLUMN_COMMENT, IS_NULLABLE, DATA_TYPE, COLUMN_KEY, EXTRA
+    SELECT COLUMN_NAME, COLUMN_COMMENT, IS_NULLABLE, DATA_TYPE, COLUMN_KEY, EXTRA, TABLE_NAME
     FROM information_schema.columns AS cols
     WHERE table_schema ='${dbName}' AND table_name = '${tbName}'
     ORDER BY cols.ordinal_position
     `;
 
-  let beanProps = [];
+  let cols = [];
 
   await sequelize.query(sql).spread((results) => {
     if (results.length < 1) {
@@ -31,17 +40,15 @@ async function getModel(dbName, tbName) {
     }
 
     /*
-     {
-    COLUMN_NAME: 'id',
-    COLUMN_COMMENT: '主键ID',
-    IS_NULLABLE: 'NO',
-    DATA_TYPE: 'int',
-    COLUMN_KEY: 'PRI',
-    EXTRA: 'auto_increment'},
+      COLUMN_NAME: 'id',
+      COLUMN_COMMENT: '主键ID',
+      IS_NULLABLE: 'NO',
+      DATA_TYPE: 'int',
+      COLUMN_KEY: 'PRI',
+      EXTRA: 'auto_increment'},
      */
-    // console.log(results);
 
-    beanProps = results.map((column) => {
+    cols = results.map((column) => {
       const {
         COLUMN_NAME,
         COLUMN_COMMENT,
@@ -49,9 +56,10 @@ async function getModel(dbName, tbName) {
         DATA_TYPE,
         COLUMN_KEY,
         EXTRA,
+        TABLE_NAME,
       } = column;
 
-      const meta = { name: _.camelCase(COLUMN_NAME) };
+      const meta = { name: _.camelCase(COLUMN_NAME), tbName: TABLE_NAME };
 
       // 是否 是主键
       meta.primaryKey = (COLUMN_KEY === 'PRI');
@@ -89,14 +97,32 @@ async function getModel(dbName, tbName) {
       return { meta, comment: COLUMN_COMMENT || '此字段没有注释' };
     });
 
+    // 关闭连接
     closeConnection();
 
     // console.log(bean);
   });
 
-  return beanProps;
+  return cols;
 }
 
+/**
+ * 根据模块文件所在目录，计算相对 common 的相对目录
+ * @param dir
+ * @returns {string}
+ */
+function getRelativePathPrefix(dir) {
+  const relativePath = '../';
+  let fileDirDepthFromSrc = 0;
+
+  dir.split('/').forEach((item) => {
+    if (item !== '') {
+      fileDirDepthFromSrc += 1;
+    }
+  });
+
+  return relativePath.repeat(fileDirDepthFromSrc);
+}
 
 /**
  * 根据模板类型生成对应文件
@@ -104,81 +130,73 @@ async function getModel(dbName, tbName) {
  * @param moduleName 模块名
  * @param dir 模块所在的目录
  * @param type 模板类型
- * @return {Promise<void>}
+ * @return {Promise<string>}
  */
-async function createFileByTplType(tbName, moduleName, dir, type) {
-  let tplName = 'bean.art';
-  let componentSuffix = '.bean.js';
+async function createFile(tbName, moduleName, dir, type) {
+  const tplName = `${type}.art`;
+  const fileExt = `.${type}.js`;
+
+  const tplPath = path.join(templateDirAbsPath, tplName);
+  const fileDirAbsPath = path.join(bizDirAbsPath, dir);
+  const filePath = path.join(fileDirAbsPath, `${moduleName}${fileExt}`);
   let data;
 
-  switch (type) {
-    case 'bean': {
-      tplName = 'bean.art';
-      componentSuffix = '.bean.js';
+  const relativePath = getRelativePathPrefix(dir);
 
-      await getModel(database, tbName).then((res) => {
-        data = res;
-      });
-      break;
-    }
-    case 'dao': {
-      tplName = 'dao.art';
-      componentSuffix = '.dao.js';
 
-      data = { moduleName, tbName };
-      break;
-    }
-    case 'service': {
-      tplName = 'service.art';
-      componentSuffix = '.service.js';
-
-      data = { moduleName, tbName, className: _.capitalize(moduleName) };
-      break;
-    }
-    case 'controller': {
-      tplName = 'controller.art';
-      componentSuffix = '.controller.js';
-
-      data = { moduleName, tbName, className: _.capitalize(moduleName) };
-      break;
-    }
-    default: {
-      throw new Error('未知类型');
-    }
+  if (type === 'bean') {
+    await getTbCols(database, tbName).then((res) => {
+      data = res;
+    });
+  } else {
+    data = {
+      moduleName, tbName, className: _.capitalize(moduleName), relativePath,
+    };
   }
 
-  const tplPath = path.join(tplDir, tplName);
-  const content = template(tplPath, { data });
-  const dirAbsPath = path.join(bizDir, dir);
-  const filePath = path.join(dirAbsPath, `${moduleName}${componentSuffix}`);
+  const fileContent = template(tplPath, { data });
 
   // 如果目录不存在，则创建
-  if (!fs.existsSync(dirAbsPath)) {
-    fs.mkdirSync(dirAbsPath);
+  if (!fs.existsSync(fileDirAbsPath)) {
+    fs.mkdirSync(fileDirAbsPath);
   }
 
-  fs.writeFile(filePath, content, 'utf8', (err) => {
-    if (err) {
-      throw err;
-    }
-
-    console.log(`${filePath} has been generated!`);
+  // 写文件
+  await new Promise((resolve, reject) => {
+    fs.writeFile(filePath, fileContent, 'utf8', (err) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve();
+    });
   });
+
+  return Promise.resolve(filePath);
 }
 
 /**
- * 生成组件的所有的文件
- * @param tbName
+ * 创建组件
+ * @param tbName {string} 表名
  * @param moduleName
  * @param dir
+ * @param types {array} 要生成的模板类型
  */
-function genComponent(tbName, moduleName, dir) {
-  createFileByTplType(tbName, moduleName, dir, 'bean').then();
-  createFileByTplType(tbName, moduleName, dir, 'dao').then();
-  createFileByTplType(tbName, moduleName, dir, 'service').then();
-  createFileByTplType(tbName, moduleName, dir, 'controller').then();
+function createComponent(
+  tbName,
+  moduleName,
+  dir,
+  types = ['bean', 'dao', 'service', 'controller'],
+) {
+  types.forEach((type) => {
+    createFile(tbName, moduleName, dir, type)
+      .then(msg => console.log(`【${msg}】创建成功`));
+  });
 }
 
 
-// genComponent('organ', 'org', 'system/org');
-genComponent('department', 'dept', 'system/dept');
+createComponent('organ', 'org', 'system/org'); // 创建 org 组件
+
+// createComponent('organ', 'org', 'system/org', ['bean']); // // 创建 org 组件的 bean 文件
+
+
+// createComponent('department', 'dept', 'system/dept');

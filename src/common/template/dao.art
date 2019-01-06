@@ -1,4 +1,4 @@
-const BaseDao = require('../../common/base/BaseDao');
+const BaseDao = require('{{data.relativePath}}common/base/BaseDao');
 const bean = require('./{{data.moduleName}}.bean');
 
 class Dao extends BaseDao {

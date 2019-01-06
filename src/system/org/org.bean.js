@@ -1,4 +1,6 @@
-const { Sequelize } = require('../../common/utils/MySqlUtil');
+const Sequelize = require('sequelize');
+
+// table: organ
 
 module.exports = {
   /** 主键ID */
