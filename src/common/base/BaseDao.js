@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const { convertToSnakeCase, convertToCamelCase } = require('../../common/utils/CaseUtil');
 
 const { sequelize } = require('../../common/utils/MySqlUtil');
@@ -19,12 +20,16 @@ class BaseDao {
   }
 
   /**
-   * 根据 id 获取记录
-   * @param id
+   * 根据 id（或包含 id 的 bean 对象） 获取记录
+   *    1、获取到了返回 bean
+   *    2、未获取到返回 null
+   * @param id {number | string | object}
    * @return {Bluebird|Promise<object|null>}
    */
   getById(id) {
-    return this.Model.findByPk(id)
+    const newId = this.getPkValue(id);
+
+    return this.Model.findByPk(newId)
       .then(result => BaseDao.fmtResult(result));
   }
 
@@ -51,28 +56,92 @@ class BaseDao {
   }
 
   /**
-   * 根据 id 删除记录
-   * @param id
+   * 根据 id（或包含 id 的 bean 对象） 删除记录。
+   * @param id {number | string | object}
    * @returns {Bluebird<any>}
    */
   deleteById(id) {
-    return this.getById(id).then(model => model.destroy({ force: true }));
+    const newId = this.getPkValue(id);
+
+    return this.Model.findByPk(newId).then((model) => {
+      if (!model) {
+        return Promise.reject(new Error(`can not get one bean with ${newId}`));
+      }
+
+      const pkName = convertToSnakeCase(this.getPkName());
+
+      return this.Model.destroy({ force: true, where: { [pkName]: newId } })
+        .then((affectedRows) => {
+          if (affectedRows === 1) {
+            return Promise.resolve();
+          }
+
+          return Promise.reject(new Error('delete fail'));
+        });
+    });
   }
 
   /**
-   * 插入
+   * 更新一条记录，bean 中需要包含 id
    * @param bean
-   * @returns {Promise<any>}
+   * @return {Bluebird<any> | Promise}
+   */
+  update(bean) {
+    const newId = this.getPkValue(bean);
+
+    if (newId == null) {
+      return Promise.reject(new Error(`update fail: ${this.getPkName()} is not allow null`));
+    }
+
+    return this.getById(newId).then((model) => {
+      if (!model) {
+        return Promise.reject(new Error(`can not get one bean with ${newId}`));
+      }
+      const pkName = convertToSnakeCase(this.getPkName());
+      return this.Model.update(this.fmtCondition(bean), { where: { [pkName]: newId } });
+    });
+  }
+
+  /**
+   * 插入一条记录
+   * @param bean
+   * @return {Promise}
    */
   insert(bean) {
-    return new Promise((resolve, reject) => {
-      new this.Model(this.fmtCondition(bean)).save((error) => {
-        if (error) {
-          return reject(error);
-        }
-        return resolve('ok');
-      });
+    const newBean = this.fmtCondition(bean);
+    return this.Model.create(newBean).then(res => BaseDao.fmtResult(res));
+  }
+
+  /**
+   * 获取主键的名称（驼峰）
+   * @return {*}
+   */
+  getPkName() {
+    let pkName = null;
+
+    Reflect.ownKeys(this.bean).some((key) => {
+      if (this.bean[key].primaryKey === true) {
+        pkName = key;
+        return true;
+      }
+      return false;
     });
+
+    return pkName;
+  }
+
+  /**
+   * 获取 bean 中的 PK 的值
+   * @param bean {object | number | string}
+   * @return {*}
+   */
+  getPkValue(bean) {
+    if (!_.isObject(bean)) {
+      return bean;
+    }
+    const pkName = this.getPkName();
+
+    return bean[pkName];
   }
 
   /**

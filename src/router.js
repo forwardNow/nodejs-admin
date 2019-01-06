@@ -1,16 +1,15 @@
 const express = require('express');
 
-const systemControllers = require('./system/controllers/index');
-const examPaperControllers = require('./exam/paper/controllers/index');
+const OrgController = require('./system/org/org.controller');
 
 const router = express.Router(null);
 
 function mountTo(app) {
-  const controllers = [].concat(systemControllers, examPaperControllers);
+  const controllers = [].concat(OrgController);
 
   controllers.forEach(Constructor => new Constructor(router));
 
-  app.use(router);
+  app.use('/system', router);
 }
 
 exports.mountTo = mountTo;

@@ -5,7 +5,7 @@ const expressJwt = require('express-jwt');
 // const routes = require('./routes/index.js');
 const router = require('./router');
 
-const UsersDao = require('./system/daos/UserDao');
+// const UsersDao = require('./system/daos/UserDao');
 
 const app = express();
 
@@ -31,58 +31,58 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
   res.render('README.html');
 });
-
-/*
- * 接口服务：以 '/api' 打头的 url 都需要认证
- * expressJwt 将解码后的对象挂载到 req.user
- */
-app.use(
-  PREFIX,
-  expressJwt({
-    secret: JWT_SECRET,
-    credentialsRequired: false,
-    getToken: function fromHeaderOrQuerystring(req) {
-      if (req.headers.token) {
-        return req.headers.token;
-      }
-
-      if (req.query && req.query.token) {
-        return req.query.token;
-      }
-
-      return null;
-    },
-  }).unless({
-    // 除了这些地址，其他的URL都需要验证
-    path: [
-      `${PREFIX}/session/login`,
-      `${PREFIX}/init`,
-    ],
-  }),
-  async (req, res, next) => {
-    // 当访问 /api/session/login 时，req.user === undefined
-    if (!req.user) {
-      req.currentUser = {};
-      return next();
-    }
-
-    if (!req.user.userId) {
-      return res.status(200).json({
-        errorCode: 401,
-        reason: '未登录',
-      });
-    }
-
-    // 将用户数据挂载到 req.currentUser
-    await UsersDao.getByCondition({ UserId: req.user.userId }).then((user) => {
-      req.currentUser = user;
-    });
-
-    // TODO: 判断是否有权限
-
-    return next();
-  },
-);
+//
+// /*
+//  * 接口服务：以 '/api' 打头的 url 都需要认证
+//  * expressJwt 将解码后的对象挂载到 req.user
+//  */
+// app.use(
+//   PREFIX,
+//   expressJwt({
+//     secret: JWT_SECRET,
+//     credentialsRequired: false,
+//     getToken: function fromHeaderOrQuerystring(req) {
+//       if (req.headers.token) {
+//         return req.headers.token;
+//       }
+//
+//       if (req.query && req.query.token) {
+//         return req.query.token;
+//       }
+//
+//       return null;
+//     },
+//   }).unless({
+//     // 除了这些地址，其他的URL都需要验证
+//     path: [
+//       `${PREFIX}/session/login`,
+//       `${PREFIX}/init`,
+//     ],
+//   }),
+//   async (req, res, next) => {
+//     // 当访问 /api/session/login 时，req.user === undefined
+//     if (!req.user) {
+//       req.currentUser = {};
+//       return next();
+//     }
+//
+//     if (!req.user.userId) {
+//       return res.status(200).json({
+//         errorCode: 401,
+//         reason: '未登录',
+//       });
+//     }
+//
+//     // 将用户数据挂载到 req.currentUser
+//     await UsersDao.getByCondition({ UserId: req.user.userId }).then((user) => {
+//       req.currentUser = user;
+//     });
+//
+//     // TODO: 判断是否有权限
+//
+//     return next();
+//   },
+// );
 
 
 // 日志

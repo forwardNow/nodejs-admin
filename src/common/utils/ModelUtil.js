@@ -8,7 +8,7 @@ const { sequelize, closeConnection } = require('./MySqlUtil');
 
 async function getModel(dbName, tbName) {
   const sql = `
-    SELECT column_name, column_comment, is_nullable, data_type, column_key, extra
+    SELECT COLUMN_NAME, COLUMN_COMMENT, IS_NULLABLE, DATA_TYPE, COLUMN_KEY, EXTRA
     FROM information_schema.columns AS cols
     WHERE table_schema ='${dbName}' AND table_name = '${tbName}'
     ORDER BY cols.ordinal_position
@@ -73,11 +73,11 @@ async function getModel(dbName, tbName) {
           break;
         }
         default: {
-          throw new Error('未映射处理的数据库类型');
+          throw new Error(`未映射处理的数据库类型：${DATA_TYPE}`);
         }
       }
 
-      return { meta, comment: COLUMN_COMMENT };
+      return { meta, comment: COLUMN_COMMENT || '此字段没有注释' };
     });
 
     closeConnection();
