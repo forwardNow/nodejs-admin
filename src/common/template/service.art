@@ -1,0 +1,27 @@
+const { Op } = require('sequelize');
+const _ = require('lodash');
+const BaseService = require('../../common/base/BaseService');
+const {{data.className}}Dao = require('./{{data.moduleName}}.dao');
+
+class {{data.className}}Service extends BaseService {
+  constructor() {
+    super({{data.className}}Dao);
+  }
+
+  /**
+   * @override
+   */
+  getPageResult(condition, pager) {
+    const newCondition = _.merge({}, condition);
+
+    // if ('organName' in newCondition) {
+    //   newCondition.organName = {
+    //     [Op.like]: `%${newCondition.organName}%`,
+    //   };
+    // }
+
+    return super.getPageResult(newCondition, pager);
+  }
+}
+
+module.exports = new {{data.className}}Service();

@@ -1,6 +1,5 @@
 const { Sequelize } = require('../../common/utils/MySqlUtil');
 
-// 机构
 module.exports = {
   /** 主键ID */
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false },

@@ -1,11 +1,11 @@
 const { Op } = require('sequelize');
 const _ = require('lodash');
 const BaseService = require('../../common/base/BaseService');
-const OrgDao = require('./org.dao');
+const DeptDao = require('./dept.dao');
 
-class OrgService extends BaseService {
+class DeptService extends BaseService {
   constructor() {
-    super(OrgDao);
+    super(DeptDao);
   }
 
   /**
@@ -14,9 +14,9 @@ class OrgService extends BaseService {
   getPageResult(condition, pager) {
     const newCondition = _.merge({}, condition);
 
-    if ('organName' in newCondition) {
-      newCondition.organName = {
-        [Op.like]: `%${newCondition.organName}%`,
+    if ('deptName' in newCondition) {
+      newCondition.deptName = {
+        [Op.like]: `%${newCondition.deptName}%`,
       };
     }
 
@@ -24,4 +24,4 @@ class OrgService extends BaseService {
   }
 }
 
-module.exports = new OrgService();
+module.exports = new DeptService();

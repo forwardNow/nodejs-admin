@@ -1,11 +1,20 @@
 const template = require('art-template');
 const _ = require('lodash');
 const path = require('path');
+const fs = require('fs');
 
 const { database } = require('../configs/db.config');
 const { sequelize, closeConnection } = require('./MySqlUtil');
 
+const tplDir = path.join(__dirname, '../template');
+const bizDir = path.join(__dirname, '../../');
 
+/**
+ * 获取数据库表结构模型
+ * @param dbName
+ * @param tbName
+ * @return {Promise<Array>}
+ */
 async function getModel(dbName, tbName) {
   const sql = `
     SELECT COLUMN_NAME, COLUMN_COMMENT, IS_NULLABLE, DATA_TYPE, COLUMN_KEY, EXTRA
@@ -88,14 +97,88 @@ async function getModel(dbName, tbName) {
   return beanProps;
 }
 
-const tplDir = path.join(__dirname, '../template');
 
-getModel(database, 'organ').then((res) => {
-  const tplPath = path.join(tplDir, 'model.art');
-  const content = template(tplPath, { beanProps: res });
+/**
+ * 根据模板类型生成对应文件
+ * @param tbName 表明
+ * @param moduleName 模块名
+ * @param dir 模块所在的目录
+ * @param type 模板类型
+ * @return {Promise<void>}
+ */
+async function createFileByTplType(tbName, moduleName, dir, type) {
+  let tplName = 'bean.art';
+  let componentSuffix = '.bean.js';
+  let data;
 
-  console.log(content);
+  switch (type) {
+    case 'bean': {
+      tplName = 'bean.art';
+      componentSuffix = '.bean.js';
 
-  return content;
-});
+      await getModel(database, tbName).then((res) => {
+        data = res;
+      });
+      break;
+    }
+    case 'dao': {
+      tplName = 'dao.art';
+      componentSuffix = '.dao.js';
 
+      data = { moduleName, tbName };
+      break;
+    }
+    case 'service': {
+      tplName = 'service.art';
+      componentSuffix = '.service.js';
+
+      data = { moduleName, tbName, className: _.capitalize(moduleName) };
+      break;
+    }
+    case 'controller': {
+      tplName = 'controller.art';
+      componentSuffix = '.controller.js';
+
+      data = { moduleName, tbName, className: _.capitalize(moduleName) };
+      break;
+    }
+    default: {
+      throw new Error('未知类型');
+    }
+  }
+
+  const tplPath = path.join(tplDir, tplName);
+  const content = template(tplPath, { data });
+  const dirAbsPath = path.join(bizDir, dir);
+  const filePath = path.join(dirAbsPath, `${moduleName}${componentSuffix}`);
+
+  // 如果目录不存在，则创建
+  if (!fs.existsSync(dirAbsPath)) {
+    fs.mkdirSync(dirAbsPath);
+  }
+
+  fs.writeFile(filePath, content, 'utf8', (err) => {
+    if (err) {
+      throw err;
+    }
+
+    console.log(`${filePath} has been generated!`);
+  });
+}
+
+/**
+ * 生成组件的所有的文件
+ * @param tbName
+ * @param moduleName
+ * @param dir
+ */
+function genComponent(tbName, moduleName, dir) {
+  createFileByTplType(tbName, moduleName, dir, 'bean').then();
+  createFileByTplType(tbName, moduleName, dir, 'dao').then();
+  createFileByTplType(tbName, moduleName, dir, 'service').then();
+  createFileByTplType(tbName, moduleName, dir, 'controller').then();
+}
+
+
+// genComponent('organ', 'org', 'system/org');
+genComponent('department', 'dept', 'system/dept');

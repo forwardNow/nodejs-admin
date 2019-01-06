@@ -1,7 +1,7 @@
 const { Sequelize } = require('../../common/utils/MySqlUtil');
 
 module.exports = {
-{{each beanProps prop index}}  /** {{prop.comment}} */
+{{each data prop index}}  /** {{prop.comment}} */
   {{prop.meta.name}}: { type: {{prop.meta.type
 }}{{if prop.meta.primaryKey}}, primaryKey: true{{/if
 }}{{if prop.meta.autoIncrement}}, autoIncrement: true{{/if
