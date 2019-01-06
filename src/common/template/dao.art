@@ -1,0 +1,7 @@
+const BaseDao = require('../../common/base/BaseDao');
+const bean = require('./{{moduleName}}.bean');
+
+class Dao extends BaseDao {
+}
+
+module.exports = new Dao('{{tabName}}', bean);

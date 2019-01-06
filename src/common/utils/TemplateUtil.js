@@ -88,13 +88,14 @@ async function getModel(dbName, tbName) {
   return beanProps;
 }
 
+const tplDir = path.join(__dirname, '../template');
+
 getModel(database, 'organ').then((res) => {
-  // console.log(res);
-  const tplPath = `${path.join(__dirname, '..')}/template/model.art`
-  console.log(template(tplPath, { beanProps: res }));
+  const tplPath = path.join(tplDir, 'model.art');
+  const content = template(tplPath, { beanProps: res });
+
+  console.log(content);
+
+  return content;
 });
 
-
-module.exports = {
-  getModel,
-};
