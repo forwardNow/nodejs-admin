@@ -194,9 +194,17 @@ function createComponent(
 }
 
 
-createComponent('organ', 'org', 'system/org'); // 创建 org 组件
+// createComponent('organ', 'org', 'system/org'); // 创建 org 组件
 
 // createComponent('organ', 'org', 'system/org', ['bean']); // // 创建 org 组件的 bean 文件
 
 
 // createComponent('department', 'dept', 'system/dept');
+
+// createComponent('user', 'user', 'system/user'); // 创建 user 组件
+
+// createComponent('city_area', 'area', 'system/area'); // 创建 area 组件
+
+// createComponent('user_role', 'role', 'system/role'); // 创建 role 组件
+
+createComponent('upc_right', 'menu', 'system/menu'); // 创建 menu 组件
