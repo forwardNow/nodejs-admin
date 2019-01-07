@@ -34,6 +34,16 @@ class BaseDao {
   }
 
   /**
+   * 根据条件获取一条记录
+   * @param condition
+   * @return {Bluebird<any>}
+   */
+  getOneByCondition(condition = {}) {
+    return this.Model.findOne({ where: this.fmtCondition(condition) })
+      .then(res => BaseDao.fmtResult(res));
+  }
+
+  /**
    * 根据条件和分页器获取一页数据
    * @param condition
    * @param pager

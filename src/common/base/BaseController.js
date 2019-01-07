@@ -73,9 +73,9 @@ class BaseController {
    */
   list() {
     this.router.post(`/${this.moduleName}/list`, (req, res) => {
-      const { body } = req;
+      const { body: { condition, pager } } = req;
 
-      this.service.getPageResult(body)
+      this.service.getPageResult(condition, pager)
         .then(result => res.status(200).json({
           errorCode: 0,
           reason: 'OK',
@@ -173,7 +173,7 @@ class BaseController {
     this.router.post(`/${this.moduleName}/update`, (req, res) => {
       const { body } = req;
 
-      this.service.insert(body)
+      this.service.update(body)
         .then(() => res.status(200).json({
           errorCode: 0,
           reason: 'OK',
