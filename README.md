@@ -1,14 +1,35 @@
-# 基础数据支撑平台（系统）
+# 系统管理
 
 ## 1. 介绍
 
-此系统为基础数据支撑平台提供数据服务。
+此项目为系统管理模块。
 
 ## 2. 编撰
 
-吴钦飞。
+吴钦飞（wuqinfei@qq.com）。
 
-## 3. 文档
+## 3. 需求分析
 
-* 在线：[https://forwardNow.github.io/nodejs-admin/book](https://forwardNow.github.io/nodejs-admin/book)
-* Markdown：[./docs/SUMMARY.md](./docs/SUMMARY.md)
+涉及到的功能模块，如下图（系统管理 - 用例图）：
+
+1. 部门管理
+2. 用户管理
+3. 角色管理（权限）
+4. 菜单管理
+5. 资源管理
+6. 字典管理
+7. 日志管理
+8. 系统参数管理
+
+![系统管理_需求分析_系统框架图](./docs/visio/系统管理_需求分析_系统框架图.png)
+
+### 3.1. 部门管理
+
+
+## 4. 数据库建模
+
+>使用 MySQL 数据库。
+
+如下图（系统管理_物理模型_MySQL）：
+
+![系统管理_物理模型_MySQL](./docs/powserDesigner/系统管理_物理模型_MySQL.png)
